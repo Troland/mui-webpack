@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>添加银行卡</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/bank-card.css" />
+</head>
+<body>
+<header id="bank-card" class="mui-bar mui-bar-nav mui-bar-transparent">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title">银行卡</h1>
+    <i class="mui-pull-right mui-icon-extra mui-icon-extra-card" target="bank-add.html" target_id="bank-add-html"></i>
+</header>
+<div class="mui-content">
+	<!--
+	<div class="mui-card">
+		<div class="mui-card-header">建设银行</div>
+		<div class="mui-card-content">
+			<div class="mui-card-content-inner mui-text-right">xxxx xxxx xxxx 3432 339</div>
+		</div>
+		<div class="mui-card-footer"><span class="mui-icon-extra mui-icon-extra-card"></span>储蓄卡</div>
+	</div>
+	<div class="mui-card">
+		<div class="mui-card-header">招商银行</div>
+		<div class="mui-card-content zhaoshang">
+			<div class="mui-card-content-inner mui-text-right">xxxx xxxx xxxx 3432 339</div>
+		</div>
+		<div class="mui-card-footer"><span class="mui-icon-extra mui-icon-extra-card"></span>储蓄卡</div>
+	</div>
+	-->
+</div>
+<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+	//启用双击监听
+	mui.init({
+		gestureConfig:{
+			doubletap:true
+		},
+		subpages:[{
+			url:'bankcard-sub.html',
+			id:'bankcard-sub-html',
+			styles:{
+				top: '44px',
+				bottom: '0px',
+			}
+		}]
+	});
+	
+	//检查是否实名认证，否则，先进行实名认证
+	var plusReady = function(){
+		//计算最大提现数目
+		app.getRealUserInfo("identity_is_verify", function(data){
+			if(data == 0 || data == ''){
+				mui.alert('您还未进行实名认证', '提示', function() {
+					openWebview('certification-html', '../certification/certification.html');
+				});
+				return false;
+			}
+		});
+	}
+	doc.addEventListener('plusready', plusReady, false);
+	
+	var contentWebview = null;
+	document.querySelector('header').addEventListener('doubletap',function () {
+		if(contentWebview==null){
+			contentWebview = plus.webview.currentWebview().children()[0];
+		}
+		contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+	});
+    //点击页面列表跳转至对应的页面
+    $("#bank-card").on("tap", "i", function(){
+    	var target    = this.getAttribute("target");
+    	var target_id = this.getAttribute("target_id");
+    	if(target && target_id){
+			openWebview(target_id, target);  		
+    	}
+    });
+})(mui, document)
+</script>
+</body>
+</html>

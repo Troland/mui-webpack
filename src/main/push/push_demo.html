@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>PUSH DEMO</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<style type="text/css">
+			.mui-bar-nav{
+				background-color: #FFFFFF;
+				padding: 0;
+			}
+			.mui-bar ul{
+				border-bottom: solid 1px #CCCCCC;
+				-webkit-box-shadow: 0 1px 6px #CCCCCC;
+				-moz-box-shadow: 0 1px 6px #CCCCCC;
+				box-shadow: 0 1px 6px #CCCCCC;
+			}			
+			.mui-bar ul li{
+				padding: 0 20px;
+				margin: 0;
+			}
+			.mui-bar ul li.nav-bar{
+				background-color: #E44346;
+				line-height: 44px;
+				height:44px;
+			}
+			.mui-bar ul li.nav-bar a{
+				width: 44px;
+				height: 44px;
+				padding: 0;
+				margin: 0;
+				background-repeat: no-repeat;
+				background-position:center;
+			}
+			.mui-content div{
+				padding: 10px;
+			}
+			.mui-content div#info{
+				background: #222222;
+				color: #FFFFFF;
+			}
+			nav.mui-bar{
+				padding: 0;
+			}
+			ul.tools-buy-bar,ul.tools-buy-bar li{
+				text-align: center;
+				padding: 0;
+				color: #222222;
+			}
+			ul.tools-buy-bar li:first-child{
+				padding: 5px 0;
+			}
+			ul.tools-buy-bar li:last-child{
+				background-color: #242424;
+			}
+			ul.tools-buy-bar li div.bottom-buy{
+				width: 30%;
+				text-align: center;
+				line-height: 50px;
+				background-color: #E44346;
+			}
+			ul.tools-buy-bar li div.bottom-buy a{
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<ul class="mui-table-view header-box">
+				<li class="mui-table-view-cell mui-media nav-bar">
+					<a class="mui-action-back mui-pull-left">
+						<i class="back-btn iconfont-back"></i>
+					</a>
+					<h1 class="mui-title">推送测试</h1>
+				</li>
+			</ul>
+		</header>
+		<div class="mui-content">
+			<div id="info"></div>
+		    <div id="output"></div>
+		    <div id="dcontent"></div>
+		</div>
+	    <nav class="mui-bar mui-bar-tab nav-box"></nav>
+	<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	    mui.init();
+	    (function($, doc){
+	    		var infoDiv = doc.getElementById("info");
+	    		$.plusReady(function() {
+				var info = plus.push.getClientInfo();
+				console.log(JSON.stringify(info));
+				var s = "id:\r\n" + info.id + "\r\n" +
+						"token:\r\n" + info.token + "\r\n" +
+						"clent_id:\r\n" + info.clientid + "\r\n" +
+						"appid:\r\n" + info.appid + "\r\n" +
+						"appkey:\r\n" + info.appkey + "\r\n";
+				infoDiv.innerText = s;
+				BDF.listAllPush();
+	    		});
+
+			var ajaxDataInfo = function(page, list_num, callback){
+				BDF.api('/user/Collect/getCollectList', {'data': {"var_page": list_num,"page": page}}, 
+					function (result) {
+			        		if(!isEmptyObject(result)){
+			        			if(result.status == '0'){
+			        				return callback(result);
+			        			}else{
+			        				plus.nativeUI.toast(result.msg);
+			        			}
+			        		}else{
+			        			plus.nativeUI.toast("网络错误，请联系管理员");
+			        		}
+					}
+				)
+			}
+			
+			var ajaxDelFavourite = function(lott_id, callback){
+				BDF.api('/user/Collect/concelCollect', {'data': {"lott_id": lott_id}}, 
+					function (result) {
+			        		if(!isEmptyObject(result)){
+			        			return callback(result);
+			        		}else{
+			        			plus.nativeUI.toast("网络错误，请联系管理员");
+			        		}
+		        		}
+				)
+			}
+	    })(mui, document);
+	</script>
+</body>
+</html>

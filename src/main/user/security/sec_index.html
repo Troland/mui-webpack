@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>个人中心</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="../../../css/mui.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/app.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/common.css">
+	<style>
+		.user-phone {
+			line-height: 24px;
+		}
+
+		.user-phone img {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			border: 1px solid #eee;
+			position: absolute;
+			top: 8px;
+			right: 40px;
+		}
+		.user-nickname {
+			position: absolute;
+			top: 50%;
+			right: 40px;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			-o-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+	</style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+		<h1 class="mui-title">个人中心</h1>
+	</header>
+	<div class="mui-content" id="J_profile">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell user-phone">
+				<a class="mui-navigate-right" id="J_avatar">头像
+		    			<img class="mui-pull-right" id="user-phone">
+		    		</a>
+			</li>
+			<li class="mui-table-view-cell">
+				手机号<span id="user-name" class="mui-pull-right"></span>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" data-link="sec_nickname.html" data-vid="sec-nickname-html">昵称<span class="user-nickname" id="J_nickname"></span></a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a class="mui-navigate-right" data-link="sec_modifypassword.html" data-vid="sec-modifypassword-html">登录密码修改</a>
+			</li>
+			<!--
+		    <li class="mui-table-view-cell">
+		    	手机号<span id="user-phone" class="mui-pull-right"></span>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    		<a class="mui-navigate-right" data-link="sec_settings.html" data-vid="sec-settings-html">安全设置去绑定</a>
+		    </li>
+		    -->
+		</ul>
+	</div>
+	<div id="J_cameraSheet" class="mui-popover mui-popover-bottom mui-popover-action">
+		<!-- 可选择菜单 -->
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<a href="javascript:void(0)" id="J_camera">打开照相机</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a href="javascript:void(0)" id="J_photoAlbum">从相册获取</a>
+			</li>
+		</ul>
+		<!-- 取消菜单 -->
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<a href="#J_cameraSheet"><b>取消</b></a>
+			</li>
+		</ul>
+	</div>
+	<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/_config.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/javascript">
+		var userLoginStatus = function() {
+			var user = app.getState();
+			if (!isEmptyObject(user)) {
+				document.getElementById('user-name').innerHTML = user.account;
+				document.getElementById('user-phone').innerHTML = user.account;
+			}
+		}
+		userLoginStatus();
+		var cmr;
+
+		function openActionSheet() {
+			mui('#J_cameraSheet').popover('toggle');
+		}
+
+		// 昵称更改
+		window.addEventListener('nickname', function (event) {
+			var nickName = event.detail.nickName;
+			var $nickName = document.getElementById('J_nickname');
+
+			if (nickName) {
+				$nickName.innerHTML = nickName
+			}
+		});
+
+		//压缩图片
+		function compressImage(options) {
+			var parts = options.imgName.split('.'),
+				timeStamp = +new Date(),
+				dstPath = '_doc/' + options.imgName;
+
+			options.imgName = parts[0] + timeStamp + '.' + parts[1];
+			dstPath = '_doc/' + options.imgName;
+
+			plus.zip.compressImage({
+				src: options.src,
+				dst: dstPath,
+				width: '100px',
+				height: '100px',
+				quality: 20
+			}, function() {
+				createUpload({
+					imagePath: dstPath
+				});
+			}, function(error) {
+				mui.toast("Compress error!");
+			});
+		}
+
+		// 上传文件
+		function createUpload(options) {
+			var token = JSON.parse(localStorage.getItem('$state')).token
+			var task = plus.uploader.createUpload(_config.apiUrl + "/user/User/uploadAvatar", {
+					method: "POST",
+					blocksize: 204800,
+					priority: 100
+				},
+				function(res, status) {
+					var $userAvatar = document.getElementById('user-phone');
+					// 上传完成判断是否登录
+					if (status == 200 && res.responseText.status != '0041014') {
+						mui.toast('头像上传成功');
+						var imgUrl = JSON.parse(res.responseText).data;
+						var avatarUrl = _config.apiUrl + '/' + imgUrl;
+						var userInfo = JSON.parse(localStorage.getItem('$localUser'));
+						var webView = plus.webview.getWebviewById('user-html');
+
+						$userAvatar.src = avatarUrl;
+						userInfo.avatar = imgUrl;
+						localStorage.setItem('$localUser', JSON.stringify(userInfo));
+						mui.fire(webView, 'avatar.update', {
+							avatar: avatarUrl
+						});
+						mui('#J_cameraSheet').popover('toggle');
+					} else {
+						mui.toast("Upload failed: " + status);
+					}
+				}
+			);
+
+			task.addFile(options.imagePath, {
+				key: "image"
+			});
+			task.addData("token", token);
+			task.start();
+		}
+
+		// 从相册中选择图片
+		function openPhotoalbum() {
+			// 从相册中选择图片
+			plus.gallery.pick(function(path) {
+				var imgName = path.slice(path.lastIndexOf('/') + 1)
+				compressImage({
+					src: path,
+					imgName: imgName
+				})
+			}, function(e) {
+			}, {
+				filter: "image"
+			});
+		}
+
+		function openCamera() {
+			cmr = plus.camera.getCamera();
+			var res = cmr.supportedImageResolutions[0];
+			var fmt = cmr.supportedImageFormats[0];
+
+			cmr.captureImage(function(path) {
+					var imgName = path.slice(path.lastIndexOf('/') + 1)
+					compressImage({
+						src: path,
+						imgName: imgName
+					})
+				},
+				function(error) {
+					alert("Capture image failed: " + error.message);
+				}, {
+					resolution: res,
+					format: fmt
+				}
+			);
+		};
+		(function($, doc) {
+			$.init();
+			var $cameraBtn = document.getElementById('J_camera');
+			var $photoBtn = document.getElementById('J_photoAlbum');
+			var $nickName = document.getElementById('J_nickname');
+			var $phone = document.getElementById('user-phone');
+			var userInfo = JSON.parse(localStorage.getItem('$localUser'));
+			var $avatarBtn = document.getElementById('J_avatar');
+
+			$nickName.innerHTML = userInfo.user_name;
+			$phone.src = userInfo.avatar ? _config.apiUrl + '/' + userInfo.avatar : '../../../images/user/header_004.png';
+
+			$cameraBtn.addEventListener('tap', function() {
+				openCamera();
+			}, false)
+			$photoBtn.addEventListener('tap', function() {
+				openPhotoalbum();
+			}, false);
+			$avatarBtn.addEventListener('tap', function() {
+				openActionSheet();
+			}, false);
+
+			$('#J_profile').on('tap', 'a[data-link]', function() {
+				var link = this.getAttribute('data-link'),
+					viewId = this.getAttribute('data-vid');
+
+				var newWV = plus.webview.create(link, viewId);
+				newWV.show('slide-in-right', 200);
+			}, false);
+			//				$('#J_cameraSheet').popover('toggle');
+			$.plusReady(function() {
+				var webview = plus.webview.currentWebview();
+				var nickName = webview.nickName;
+				if (nickName) {
+					$nickName.innerHTML = nickName
+				}
+				//					var cmr = plus.camera.getCamera();
+			});
+		})(mui, document)
+	</script>
+</body>
+
+</html>

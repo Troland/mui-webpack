@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>设置中心</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css">
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css">
+		<link rel="stylesheet" type="text/css" href="../../../css/app.css">
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css">
+		<style rel="stylesheet" type="text/css">
+			ul.mui-table-view {
+				margin-top: 15px;
+				border: solid 1px #F0F0F0;
+			}
+			
+			ul.mui-table-view li i {
+				font-size: 20px;
+				margin-right: 10px;
+				color: #666666;
+			}
+			
+			ul.mui-table-view li i.mui-icon-extra-custom {
+				position: relative;
+				top: 2px;
+			}
+			
+			.mui-content-server {
+				margin: 0 auto;
+				width: 90%;
+				bottom: 20px;
+				left: 5%;
+				position: absolute;
+			}
+			
+			.mui-content-server button {
+				padding: 8px;
+				color: #999999;
+			}
+			
+			.mui-content-server p {
+				width: 100%;
+				text-align: center;
+				line-height: 20px;
+				padding: 0;
+				margin: 0;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+			<h1 class="mui-title">设置</h1>
+		</header>
+		<div class="mui-content">
+			<!--
+			<ul class="mui-table-view mui-table-view-chevron" style="margin-top: 15px;">
+				<li class="mui-table-view-cell mui-media">
+					<a>
+						<img class="mui-media-object mui-pull-left" src="../../../images/user/header_004.png">
+						<div class="mui-media-body">
+							<span id="real-name"></span>
+							<p class="mui-ellipsis">账号：
+								<font id="user-account"></font>
+							</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			-->
+			<!--
+	<ul class="mui-table-view" style="margin-top: 15px;">
+		<li class="mui-table-view-cell">
+			<a class="mui-navigate-right">
+				<i class="mui-icon mui-icon-contact"></i>个人资料
+			</a>
+		</li>
+	</ul>
+	-->
+
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" target="feedback.html" target_id="feedback-html">
+						<i class="mui-icon-extra mui-icon-extra-custom"></i>问题反馈
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" target="aboutus.html" target_id="aboutus-html">
+						<i class="mui-icon mui-icon-info"></i>关于我们
+					</a>
+				</li>
+				<!--
+				<li id="service-tel" class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<i class="mui-icon mui-icon-phone"></i>客服电话
+					</a>
+				</li>
+				
+				<li id="clear-cache" class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<i class="mui-icon mui-icon-reload"></i>清除缓存
+					</a>
+				</li>
+				-->
+			</ul>
+
+			<div id="login-out" class="mui-content-server mui-text-center">
+				<button class="mui-btn mui-btn-block">退出登录</button>
+				<p>copyright © 2017-2021</p>
+				<p id="test">厦门市VDD科技有限公司</p>
+			</div>
+		</div>
+		<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			(function($, doc) {
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+
+				var plusready = function() {
+					app.getRealUserInfoByKeys(['real_name', 'mobile'], function(res) {
+						if(!isEmptyObject(res)) {
+							//var real_name = isEmptyObject(res.real_name) ? '未实名认证' : res.real_name;
+							//doc.getElementById("real-name").innerHTML = res.real_name;
+							//doc.getElementById("user-account").innerHTML = res.mobile;
+						}
+					});
+				}
+				
+				//点击页面列表跳转至对应的页面
+				$("div.mui-content").on("tap", "a", function() {
+					var target = this.getAttribute("target");
+					var target_id = this.getAttribute("target_id");
+					if(target && target_id) {
+						openWebview(target_id, target, {
+							extras: {}
+						});
+					}
+				});
+
+				$("#login-out").on("tap", "button", function() {
+					app.setState();
+					var mainPage = {
+						'CheckLogin': plus.webview.getWebviewById('user-html'),
+						'RefreshEvent': plus.webview.getWebviewById('order-html'),
+						'LoginOut': plus.webview.getWebviewById('login-html')
+					};
+					if(mainPage) {
+						$.each(mainPage, function(index, item) {
+							if(item) {
+								mui.fire(item, index);
+							}
+						});
+					}
+					openWebview('login-html', '/main/login/login.html');
+				});
+
+				doc.addEventListener('plusready', plusready, false);
+			})(mui, document)
+		</script>
+	</body>
+
+</html>

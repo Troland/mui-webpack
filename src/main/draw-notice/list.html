@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>彩票列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/ui.css">
+    <link rel="stylesheet" href="../../css/draw-notice/list.css">
+    <style type="text/css">
+      .mui-content>.mui-table-view:first-child {
+        margin-top: -1px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="mui-bar mui-bar-nav">
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title" id="J_title">列表</h1>
+    </header>
+    <!--下拉刷新容器-->
+    <div id="pullrefresh" class="mui-content">
+      <!--数据列表-->
+      <ul class="lottery-table-view lottery-list" id="J_view"></ul>
+    </div>
+    <script id="lottery-tpl" type="text/template">
+      {{each list item i}}
+        <li class="lottery-list__item {{if i === 0}}lottery-list__item_current{{/if}}">
+          <a class="mui-navigate-right" type="{{item.lotteryType}}">
+            <div class="lottery-hd"><strong>{{ item.lotteryType }}</strong>{{ item.lotteryPeriod }} {{ item.lotteryDate }}</div>
+            <div class="lottery-bd">
+              <span class="lottery-num">1</span>
+              <span class="lottery-num">2</span>
+              <span class="lottery-num">3</span>
+              <span class="lottery-num">4</span>
+              <span class="lottery-num">5</span>
+              <span class="lottery-num">6</span>
+              <span class="lottery-num lottery-num_special">7</span>
+            </div>
+          </a>
+        </li>
+      {{/each}}
+    </script>
+    <!--大乐透-->
+		<script type="text/template" id="lotterySuperLotto-tpl">
+			{{each list item i}}
+				<li class="lottery-list__item {{if i === 0}}lottery-list__item_current{{/if}}">
+					<a class="mui-navigate-right" type="{{item.lott_id}}" lotteryperiod="{{ item.expect }}">
+						<div class="lottery-hd"><strong>{{ item.lott_name }}</strong>{{ item.subTitle }}</div>
+						<div class="lottery-bd">
+							{{each item.winningNumbers number i}}
+								<span class="lottery-num">{{ number }}</span>
+							{{/each}}
+							{{each item.specialNumbers number i}}
+								<span class="lottery-num lottery-num_special-current">{{ number }}</span>
+							{{/each}}
+						</div>
+					</a>
+				</li>
+			{{/each}}
+		</script>
+		<!--双色球-->
+		<script type="text/template" id="lotteryUnionLotto-tpl">
+			{{each list item i}}
+				<li class="lottery-list__item {{if i === 0}}lottery-list__item_current{{/if}}">
+					<a class="mui-navigate-right" type="{{item.lott_id}}" lotteryperiod="{{ item.expect }}">
+						<div class="lottery-hd"><strong>{{ item.lott_name }}</strong>{{ item.subTitle }}</div>
+						<div class="lottery-bd">
+							{{each item.winningNumbers number i}}
+								<span class="lottery-num">{{ number }}</span>
+							{{/each}}
+						</div>
+					</a>
+				</li>
+			{{/each}}
+		</script>
+    <script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      ;(function($, doc) {
+        $.init({
+          pullRefresh: {
+            container: '#pullrefresh',
+            down: {
+            	  auto:true,
+              style:'circle',
+              callback: pulldownRefresh
+            },
+            up: {
+              contentrefresh: '正在加载...',
+              contentnomore: '没有更多数据了',
+              callback: pullupRefresh
+            }
+          }
+        });
+        
+        var count = 0;
+        var initPage = 1;
+        var itemsPerPage = 40;
+        var currentPage = 1;
+        var hasMoreData = true;
+        var lotteries = [];
+        var $view = document.getElementById('J_view')
+        var lotteryTpl = document.getElementById('lottery-tpl').innerHTML;
+        var lotteryType;
+        var lotteryTplType;
+        var data = {
+            list: [
+            {
+              lotteryType: '双色球',
+              lotteryPeriod: '第2017128期',
+              lotteryDate: '2017-10-28(周二)'
+            },
+            {
+              lotteryType: '双色球',
+              lotteryPeriod: '第2017128期',
+              lotteryDate: '2017-10-28(周三)'
+            },
+            {
+              lotteryType: '双色球',
+              lotteryPeriod: '第2017128期',
+              lotteryDate: '2017-10-28(周四)'
+            }
+          ]
+        };
+        
+				/**
+				 * 请求数据	
+				 * @param {Object} options
+				 * @param {Number} type  1: 下拉刷新, 2: 上拉加载
+				 * @param {Function} cb
+				 */
+        function fetchData(options, type, cb) {
+        		$.post('http://47.52.228.84:8081/iletou/result/getHistory', options, function (res) {
+        			if(res.status === '0') {
+        				var items = res.data.items, html = '';
+        				
+        				for (var i = 0; i < items.length; i++) {
+									var item = items[i];
+									// 判断彩票模板
+									switch (lotteryTplType){
+										case 'lotteryUnionLotto-tpl':
+											item.winningNumbers = item.open_code.split(',');
+											break;
+										case 'lotterySuperLotto-tpl':
+											var splits = item.open_code.split('+');
+											var winningNumbers = splits[0].split(',');
+											var specialNumbers = splits[1].split(',');
+											item.winningNumbers = winningNumbers;
+											item.specialNumbers = specialNumbers;
+											break;
+									}
+									item.subTitle = '第' + item.expect + '期 ' + item.open_time;
+							}
+        				
+							if (type === 1) {
+        					lotteries = items;
+        				} else {
+        					lotteries = lotteries.concat(items);
+        				}
+        				html += template(lotteryTplType, {list: lotteries})
+        				$view.innerHTML = html
+        				if (type === 1) {
+      						$('#pullrefresh').pullRefresh().refresh(true);
+        				} else {
+        					// 判断有无更多数据, true表示没有更多数据
+								hasMoreData = !(lotteries.length % itemsPerPage);
+        					$('#pullrefresh').pullRefresh().endPullup(!hasMoreData);
+        				}
+        				cb && cb();
+        			} else {
+        				$.toast(res.msg)
+        			}
+        		}, 'json')
+        }
+        
+        // 上拉加载
+        function pullupRefresh() {
+//      		hasMoreData = !(lotteries % itemsPerPage)
+//					if (hasMoreData) {
+//						currentPage++
+//					}
+					currentPage = Math.ceil(lotteries.length / itemsPerPage) + 1;
+        		var params = {
+        			id: lotteryType,
+        			page: currentPage,
+        			var_page: itemsPerPage
+        		}
+        		fetchData(params, 2)
+//        setTimeout(function() {
+//          $('#pullrefresh').pullRefresh().endPullup((++count > 2)); //参数为true代表没有更多数据了。
+//          var table = document.body.querySelector('.lottery-table-view');
+//          var cells = document.body.querySelectorAll('.lottery-list__item');
+//          var html = template('lottery-tpl', data)
+//          table.innerHTML = html
+//        }, 1500);
+        }
+        
+        /**
+         * 下拉刷新具体业务实现
+         */
+        function pulldownRefresh() {
+        		var params = {
+        			id: lotteryType,
+        			page: 1,
+        			var_page: itemsPerPage
+        		};
+        		currentPage = 1;
+        		fetchData(params, 1, function () {
+        			$('#pullrefresh').pullRefresh().endPulldown();
+        		})
+        }
+        
+//      function addData() {
+//        var table = document.body.querySelector('.lottery-table-view');
+//        var cells = document.body.querySelectorAll('.lottery-list__item');
+//        var html = template('lottery-tpl', data)
+//        table.innerHTML = html
+//      }
+        
+        $.plusReady(function () {
+          var webview = plus.webview.currentWebview();
+          var $title = document.getElementById('J_title');
+          var lotteryTypeText;
+          lotteryType = webview.lotteryType;
+          switch (lotteryType){
+						case '1':
+							lotteryTplType = 'lotteryUnionLotto-tpl';
+							lotteryTypeText = '重庆时时彩';
+							break;
+						case '3':
+							lotteryTplType = 'lotterySuperLotto-tpl';
+							lotteryTypeText = '大乐透';
+							break;
+					}
+          console.log('lotteryType: ', webview.lotteryType)
+          console.log('lotteryTypeText: ', lotteryTypeText)
+          $title.innerHTML = lotteryTypeText
+          /**
+           * 期次详情
+           */
+          $('.lottery-table-view').on('tap', '.lottery-list__item a', function (event) {
+            var type = this.getAttribute('id');
+            var lotteryNumber = this.getAttribute('lotteryperiod')
+            console.log('lotteryPeriod:', lotteryNumber)
+            var styles = {
+              
+            }
+            var extras = {
+              lotteryType: lotteryType,
+              lotteryPeriod: lotteryNumber
+            }
+            var newWV = plus.webview.create('detail.html', 'draw-notice-detail', styles, extras)
+            newWV.show('slide-in-right', 200);
+         });
+        });
+      })(mui, document);
+    </script>
+  </body>
+
+</html>

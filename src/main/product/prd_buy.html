@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>购买结算</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+	<style type="text/css">
+		.mui-bar-nav {
+			background-color: #FFFFFF;
+			padding: 0;
+		}
+
+		.mui-bar ul {
+			border-bottom: solid 1px #CCCCCC;
+			-webkit-box-shadow: 0 1px 6px #CCCCCC;
+			-moz-box-shadow: 0 1px 6px #CCCCCC;
+			box-shadow: 0 1px 6px #CCCCCC;
+		}
+
+		.mui-bar ul li {
+			padding: 0 20px;
+			margin: 0;
+		}
+
+		.mui-bar ul li.nav-bar {
+			background-color: #E44346;
+			line-height: 44px;
+			height: 44px;
+		}
+
+		.mui-bar ul li.nav-bar a {
+			width: 44px;
+			height: 44px;
+			padding: 0;
+			margin: 0;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		.mui-bar ul li.tools-time {
+			padding: 10px 20px;
+			line-height: 20px;
+			color: #222222;
+			font-size: 14px;
+		}
+
+		.mui-bar ul li.tools-time font {
+			color: #E44346;
+		}
+
+		.mui-bar ul li.tools-select {
+			background: #F2F2F2;
+			width: 100%;
+			padding: 10px;
+		}
+
+		.mui-bar ul li.tools-select span {
+			font-size: 14px;
+			width: 25%;
+			line-height: 24px;
+			text-align: center;
+			border: 1px solid #C8C7CC;
+			color: #000000;
+			float: left;
+			padding: 5px 0;
+			margin-left: 0px;
+		}
+
+		.mui-bar-nav~.mui-content {
+			padding-top: 140px;
+		}
+
+		.mui-content {
+			padding-bottom: 96px;
+		}
+
+		.mui-content #data-box li p {
+			font-size: 16px;
+			color: #333333;
+			line-height: 1.5em;
+		}
+
+		.mui-content #data-box li p:first-child {
+			color: #E44346;
+			font-size: 18px;
+			font-weight: 700;
+		}
+
+		nav.mui-bar {
+			padding: 0;
+		}
+
+		ul.tools-buy-bar,
+		ul.tools-buy-bar li {
+			text-align: center;
+			padding: 0;
+			color: #222222;
+		}
+
+		ul.tools-buy-bar li:first-child {
+			padding: 5px 0;
+		}
+
+		ul.tools-buy-bar li:last-child {
+			background-color: #242424;
+		}
+
+		ul.tools-buy-bar li div.buy-info {
+			width: 70%;
+		}
+
+		ul.tools-buy-bar li div.buy-info p {
+			line-height: 25px;
+			color: #FFFFFF;
+		}
+
+		ul.tools-buy-bar li div.bottom-buy {
+			width: 30%;
+			text-align: center;
+			line-height: 50px;
+			background-color: #E44346;
+		}
+
+		ul.tools-buy-bar li div.bottom-buy a {
+			width: 100%;
+			height: 100%;
+		}
+
+		.bet-number {
+			margin-right: 3px;
+			padding-right: 3px;
+			border-right: 1px solid #f00;
+			color: #f00;
+			font-weight: bold;
+		}
+		.mui-table-view-cell.bet .bet-btn_del {
+			padding: 3px;
+			line-height: 1;
+			-webkit-border-radius: 15px;
+			-moz-border-radius: 15px;
+			-ms-border-radius: 15px;
+			-o-border-radius: 15px;
+			border-radius: 15px;
+		}
+	</style>
+</head>
+
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<ul class="mui-table-view header-box">
+			<li class="mui-table-view-cell mui-media nav-bar">
+				<a class="mui-pull-left" href="javascript:void(0)" id="J_back">
+						<i class="back-btn iconfont-back"></i>
+					</a>
+				<h1 class="mui-title">重庆时时彩投注</h1>
+			</li>
+			<li class="mui-table-view-cell tools-time">
+				<span class="mui-pull-left">第<font id="lott_due">2017313</font>期</span>
+				<span class="mui-pull-right">截止时间：<font id="cut_date">11-16 19:30</font></span>
+			</li>
+			<li class="mui-table-view-cell tools-select">
+				<span class="action-item" data-action="1">+继续选号</span>
+				<span class="action-item" data-action="2">+机选一注</span>
+				<span class="action-item" data-action="3">+机选五注</span>
+				<span class="action-item" id="clear-all" data-action="4">+全部清空</span>
+			</li>
+		</ul>
+	</header>
+	<div class="mui-content">
+		<ul id="data-box" class="mui-table-view"></ul>
+		<div id="output"></div>
+		<div id="dcontent"></div>
+	</div>
+	<nav class="mui-bar mui-bar-tab nav-box">
+		<ul class="mui-table-view tools-buy-bar">
+			<li class="mui-table-view-cell">
+				追
+				<div class="mui-numbox" data-numbox-min='1' data-numbox-max='50' id="J_peroid">
+					<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+					<input class="mui-input-numbox" type="number" value="1" />
+					<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+				</div>期&nbsp;&nbsp;&nbsp;&nbsp;投
+				<div class="mui-numbox" data-numbox-min='1' data-numbox-max='50' id="J_times">
+					<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+					<input class="mui-input-numbox" type="number" value="1" />
+					<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+				</div>倍
+			</li>
+			<li class="mui-table-view-cell">
+				<div class="mui-pull-left mui-text-center buy-info">
+					<p>2元</p>
+					<p>1注1倍1期</p>
+				</div>
+				<div class="mui-pull-right bottom-buy"><a href="#" id="J_pay">付款</a></div>
+			</li>
+		</ul>
+	</nav>
+	<script type="text/template" id="bet-tpl">
+		{{each bets bet i}}
+		<li class="bet mui-table-view-cell" data-index="{{i}}">
+			<div class="bet__hd">
+				{{each bet.selNumbers number i}}
+					<span class="bet-number">{{ number }}</span>
+				{{/each}}
+			</div>
+			<div class="bet__bd">{{ bet.rule }}-{{ bet.subRule }} {{ bet.betCount }} 注 {{ bet.totalFee }} 元</div>
+			<a href="javascript:void(0)" class="j-del mui-btn bet-btn_del"><span class="mui-icon mui-icon-closeempty"></span></a>
+		</li>
+		{{/each}}
+	</script>
+	<script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		mui.init();
+		(function($, doc) {
+			$.plusReady(function() {
+
+			});
+			$.plusReady(function() {
+				var duaDate = doc.getElementById("lott_due");
+				var cutDate = doc.getElementById("cut_date");
+				var bets = JSON.parse(localStorage.getItem('bets'));
+				var $backBtn = document.getElementById('J_back');
+				var $bets = doc.getElementById('data-box');
+				var $pay = doc.getElementById('J_pay');
+				var userInfo = JSON.parse(localStorage.getItem('$localUser'));
+				var isLogged = !!localStorage.getItem('$localUser');
+				var webView = plus.webview.currentWebview();
+				// var bets = webView.bets;
+				var totalFee = webView.totalFee;
+				var selNumbers = bets[0].selNumbers;
+				var rule = webView.rule;
+				var subRule = webView.subRule;
+				var lotteryType = webView.lotteryType;
+				var currentExpect;
+
+				console.log('bets', JSON.stringify(bets));
+				console.log('betsHtml:', template('bet-tpl', {bets: bets}));
+        // 判断是否有选择号码过来
+				$bets.innerHTML = template('bet-tpl', {bets: bets});
+
+				var uploadListBox = function(result, callback) {
+					var table = doc.body.querySelector('#list-data');
+					var html = '';
+					if (!isEmptyObject(result.data.items)) {
+						$.each(result.data.items, function(index, item) {
+							var li = document.createElement('li');
+							li.className = "mui-table-view-cell";
+							html = '<div class="mui-slider-right mui-disabled">' +
+								'<a id="' + item.collect_id + '" class="mui-btn mui-btn-red">删除</a>' +
+								'</div>' +
+								'<div id="' + item.collect_id + '" class="mui-slider-handle mui-table">' +
+								'<img class="mui-media-object mui-pull-left" src="' + item.lott_icon + '">' +
+								'<div class="mui-table-cell mui-pull-left">' +
+								'<font>' + item.lott_name + '</font>' +
+								'<p class="mui-ellipsis">' + item.lott_info + '</p>' +
+								'</div>' +
+								'</div>';
+							li.innerHTML = html;
+							table.appendChild(li);
+						})
+					} else {
+						return callback(false);
+					}
+				}
+
+				var ajaxDataInfo = function(callback) {
+					BDF.api('/vdd/Lott/getPrepareOpenLott', {
+							'data': {
+								"lott_id": 1
+							}
+						},
+						function(result) {
+							if (!isEmptyObject(result)) {
+								if (result.status == '0') {
+									return callback(result);
+								} else {
+									plus.nativeUI.toast(result.msg);
+								}
+							} else {
+								plus.nativeUI.toast("网络错误，请联系管理员");
+							}
+						}
+					)
+				}
+
+				var ajaxDelFavourite = function(lott_id, callback) {
+					BDF.api('/user/Collect/concelCollect', {
+							'data': {
+								"lott_id": lott_id
+							}
+						},
+						function(result) {
+							if (!isEmptyObject(result)) {
+								return callback(result);
+							} else {
+								plus.nativeUI.toast("网络错误，请联系管理员");
+							}
+						}
+					)
+				}
+
+				var initFunc = function() {
+					ajaxDataInfo(function(result) {
+						if (result.status == '0') {
+							var newTime = new Date(result.data.open_time).Format("MM-dd HH:mm");
+							duaDate.innerText = result.data.expect;
+							currentExpect = result.data.expect;
+							cutDate.innerText = newTime;
+						}
+					})
+				}
+				initFunc();
+
+				// 返回
+				$backBtn.addEventListener('tap', function () {
+					var btnArray = ['否', '是'];
+					// 判断有无购彩记录
+					if (localStorage.getItem('bets') && JSON.parse(localStorage.getItem('bets')).length) {
+						$.confirm('是否保存已选彩票？', '确认退出', btnArray, function (e) {
+							if (e.index == 0) {
+								localStorage.removeItem('bets');
+							}
+							$.back();
+						})
+					} else {
+						$.back();
+					}
+				}, false);
+
+        // 操作按钮
+        $('.tools-select').on('tap', '.action-item', function () {
+					var actionType = this.getAttribute('data-action');
+
+					switch (actionType) {
+						case '1':
+							$.back();
+							break;
+						case '2':
+
+							break;
+						case '3':
+
+							break;
+						case '4':
+							$bets.innerHTML = '';
+							localStorage.removeItem('bets');
+							break;
+					}
+				});
+
+        // 查看最近符合选择器的元素
+				function findClosestNode(node, selector) {
+					var elem = null;
+					// 判断是否类名
+					var isClass = selector[0] === '.' ? true : false;
+					var selector = selector.slice(1);
+					while (node = node.parentNode) {
+						if (isClass) {
+							if (node.classList.toString().indexOf(selector) > -1) {
+								elem = node;
+								break;
+							}
+						} else {
+							if (node.getAttribute('id') === selector) {
+								elem = node;
+								break;
+							}
+						}
+					}
+
+					return elem;
+				}
+				var btnArray = ['确认', '取消'];
+
+				$('#data-box').on('tap', '.bet .j-del', function (e) {
+					var $bet = findClosestNode(this, '.bet'),
+						$ul = document.getElementById('data-box'),
+						index = +$bet.getAttribute('data-index');
+
+					var $ul = document.getElementById('data-box');
+
+					mui.confirm('确认删除该条记录？', '确认删除', btnArray, function(e) {
+						if (e.index == 0) {
+							var bets = JSON.parse(localStorage.getItem('bets'));
+							$ul.removeChild($bet);
+							bets.splice(index, 1);
+							localStorage.setItem('bets', JSON.stringify(bets));
+						} else {
+							setTimeout(function() {
+								$.swipeoutClose();
+							}, 0);
+						}
+					});
+				});
+
+				// 付款
+				$pay.addEventListener('tap', function () {
+					if (!isLogged) {
+						$.openWindow({
+							id: 'login-html',
+	            url: '../login/login.html',
+						})
+						return;
+					}
+
+					if (!bets | !bets.length) {
+						$.toast('请投注');
+						return;
+					}
+					var times = $('#J_times').numbox().getValue(),
+						peroids = $('#J_peroid').numbox().getValue(),
+						items = [];
+
+					bets.forEach(function(bet) {
+						items.push({
+							play_rule_id: bet.play_rule_id,
+							buy_lott_values: bet.selNumbers,
+							pre_money: 2
+						});
+					});
+					BDF.api('/order/order/submitOrder', {
+							type: 'POST',
+							'data': {
+								user_id: userInfo.user_id,
+								lott_id: lotteryType,
+								expect: currentExpect,
+								fold_num: times,
+								continue_num: peroids,
+								items: items,
+								win_stop: 1
+							}
+						},
+						function(res) {
+							if (res.status === '0') {
+								$.toast('购买成功');
+							} else {
+								$.toast(res.msg);
+								if (res.status === '0041001') {
+									$.openWindow({
+										id: 'beecloud-html',
+										url: '../pay/beecloud.html'
+									});
+								}
+							}
+						}
+					)
+				}, false);
+
+				// $('.tools-select').on('tap', '#clear-all', function(event) {
+				// 	var elem = doc.getElementById("data-box");
+				// 	mui.confirm('确认删除该条记录？', '确认删除', btnArray, function(e) {
+				// 		if (e.index == 0) {
+				// 			var elem_child = elem.childNodes;
+				// 			for (var i = 0; i < elem_child.length; i++) {
+				// 				if (elem_child[i].className == "mui-table-view-cell") {
+				// 					elem.removeChild(elem_child[i]);
+				// 				}
+				// 			}
+				// 		} else {
+				// 			setTimeout(function() {
+				// 				$.swipeoutClose(li);
+				// 			}, 0);
+				// 		}
+				// 	});
+				// });
+			});
+		})(mui, document);
+	</script>
+</body>
+
+</html>

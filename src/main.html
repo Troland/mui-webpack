@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>vdd index</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/mui-icons-extra.css">
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css">
+		<link rel="stylesheet" type="text/css" href="css/app.css">
+		<link rel="stylesheet" type="text/css" href="css/common.css">
+		<style>
+			html,body {
+				background: transparent !important;
+			}
+			#show-btn,#add {
+				width: 44px;
+				height: 44px;
+				color: #333;
+				font-size: 30px !important;
+			}
+
+			#show-btn {
+				text-align: left;
+			}
+
+			#add {
+				text-align: right;
+			}
+
+			#show-btn span,
+			#add span {
+				font-size: 30px;
+			}
+			/*#add*/
+
+			.mui-bar .mui-bar-tab {
+				background: transparent !important;
+				padding: 0;
+				line-height: 0;
+			}
+
+			.mui-bar.mui-bar-tab.is-cctv {
+				height: 60px;
+				padding-top: 10px !important;
+			}
+
+			.bar-bottom {
+				background: #f2f2f2;
+				height: 50px;
+			}
+
+			.mui-bar-tab .mui-tab-item {
+				height: 50px;
+			}
+
+			.mui-bar-tab .mui-tab-item i {
+				font-size: 22px;
+				position: relative;
+				top: 5px;
+			}
+
+			.mui-bar-tab .mui-tab-item .mui-tab-label {
+				font-size: 12px;
+				color: #b7b7b7;
+				position: relative;
+				top: 8px;
+			}
+		</style>
+	</head>
+
+	<body>
+	    <!-- <header class="mui-bar mui-bar-nav">
+	        <h1 class="mui-title">标题</h1>
+	    </header> -->
+		<div class="mui-content"></div>
+		<nav id="main-nav-bar" class="mui-bar mui-bar-tab nav-box">
+			<a id="ind-home-html" class="mui-tab-item mui-active" href="main/index/ind_home.html">
+				<i class="mui-icon mui-icon-home"></i>
+				<p class="mui-tab-label">首页</p>
+			</a>
+			<a id="prd-list-html" class="mui-tab-item" href="main/product/prd_list.html">
+				<i class="mui-icon mui-icon-navigate"></i>
+				<p class="mui-tab-label">彩票中心</p>
+			</a>
+			<a id="ntc-list-html" class="mui-tab-item" href="main/notice/ntc_list.html">
+				<i class="mui-icon mui-icon-spinner mui-spin" style="font-size:16px;"></i>
+				<p class="mui-tab-label">开奖</p>
+			</a>
+			<a id="user-html" class="mui-tab-item" href="main/user/user.html">
+				<i class="mui-icon mui-icon-contact"></i>
+				<p class="mui-tab-label">我的</p>
+			</a>
+		</nav>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/auto.update.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			(function($, doc) {
+				mui.init({
+					gestureConfig: {
+						doubletap: true
+					}
+				});
+
+				var titleNView = {
+					backgroundColor: '#E44346',
+					titleText: '首页',
+					titleColor: '#FFFFFF',
+					type: 'transparent',
+					//autoBackButton: true,
+					splitLine: {
+						color: '#E44346'
+					}
+				}
+				var styles = {};
+				var activeTab = '';
+				//设置默认打开首页显示的子页序号；
+				var Index = 0;
+				//把子页的路径写在数组里面
+				var subPages =  ['main/index/ind_home.html',
+								'main/product/prd_list.html',
+								'main/notice/ntc_list.html',
+								'main/user/user.html',
+								];
+				mui.plusReady(function() {
+				    //获取当前页面所属的Webview窗口对象
+				    var self = plus.webview.currentWebview();
+				    mui.each(subPages, function(key, item) {
+				        if(item == "main/index/ind_home.html"){
+				        		styles = {
+                					"top": "0",
+                					"bottom": "50px",
+							};
+				        }else{
+				        		styles = {
+                					"top": "0",
+                					"bottom": "50px",
+				        		};
+				        }
+				        var sub = plus.webview.create(item, item, styles);
+				        if (item !== 'main/index/ind_home.html') {
+				            sub.hide();
+				        }
+				        self.append(sub);
+				    });
+				});
+
+				//当前激活选项
+				var activeTab = subPages[Index];
+				//选项卡点击事件
+				mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				    //获取目标子页的id
+				    var targetTab = this.getAttribute('href');
+				    if (targetTab == activeTab) {
+				        return;
+				    }
+				    //显示目标选项卡
+				    plus.webview.show(targetTab);
+				    //隐藏当前选项卡
+				    plus.webview.hide(activeTab);
+				    //更改当前活跃的选项卡
+				    activeTab = targetTab;
+				});
+
+
+
+
+				/**
+				var plusready = function() {
+					mui.each(subPages, function(key, item) {
+						var temp = {};
+						if(item.id != "ind-list-view-html") {
+							plus.webview.hide(item.id);
+						} else {
+							activeTab = item.id;
+							temp[activeTab] = "true";
+							mui.extend(aniShow, temp);
+						}
+					})
+					//安卓自动检测自动更新
+					if(mui.os.android) {
+						mui.checkUpdate();
+					}
+				}
+				document.addEventListener('plusready', plusready, false);
+
+
+
+
+
+			mui('#main-nav-bar').on('tap', 'a', function() {
+				var id = this.getAttribute("data-wid");
+				if(!id) {
+					id = this.getAttribute('href');
+				}
+				var href = this.getAttribute('href');
+
+				//非plus环境，直接走href跳转
+				if(!mui.os.plus){
+					location.href = href;
+					return;
+				}
+				var webview_style = {
+					popGesture: "close"
+				}
+				var extras = {};
+				//webview_style.statusbar = {
+				//	background: "#f7f7f7"
+				//}
+				var webview = plus.webview.create(this.href,id,webview_style,extras);
+				webview.addEventListener("titleUpdate",function () {
+					setTimeout(function () {
+						webview.show(aniShow,300);
+					},100);
+				});
+			});
+			**／
+
+
+
+
+
+
+				/**
+				$("#main-nav-bar").on("tap", "a", function() {
+					var targetTab = this.getAttribute('id');
+					var self = plus.webview.currentWebview();
+					if(targetTab == activeTab) {
+						return true;
+					}
+					if(mui.os.ios || aniShow[targetTab]) {
+						plus.webview.show(targetTab);
+					} else {
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						plus.webview.show(targetTab, "fade-in", 300);
+					}
+					plus.webview.hide(activeTab);
+					activeTab = targetTab;
+					//触发订单事件处理
+					actAdminOrder(targetTab);
+				});
+
+				var actAdminOrder = function(targetTab) {
+					var headRight = doc.getElementById("amdin-order");
+					app.getRealUserInfo("is_admin", function(res) {
+						var isAdmin = res;
+						if(targetTab == "order-html" && isAdmin == "1") {
+							BDF.removeClass(headRight, "hide");
+							clickAdminOrder();
+						} else {
+							BDF.addClass(headRight, "hide");
+						}
+					});
+				}
+
+				var clickAdminOrder = function() {
+					$("header").on("tap", "p", function() {
+						openWebview('admin-order-html', 'main/product/admin-order.html');
+					})
+				}
+				//自定义事件，模拟点击“首页选项卡”
+				document.addEventListener('gohome', function() {
+					var defaultTab = document.getElementById("defaultTab");
+					//模拟首页点击
+					mui.trigger(defaultTab, 'tap');
+					//切换选项卡高亮
+					var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+					if(defaultTab !== current) {
+						current.classList.remove('mui-active');
+						defaultTab.classList.add('mui-active');
+					}
+				});
+				//自定义事件，更新BarBackground
+				document.addEventListener('uploadBarBackground', function() {
+					var barBackground = event.detail.barBackground;
+					if(barBackground) {
+						plus.navigator.setStatusBarBackground('#E44346');
+					}
+				});
+				**/
+				/***************************************页面使用到的函数*********************************************/
+				//重写android手机返回键的操作
+				var first = null;
+				mui.back = function() {
+					if(!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出应用');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if(new Date().getTime() - first < 1000) {
+							plus.runtime.quit();
+						}
+					}
+				};
+
+				//var contentWebview = null;
+				//document.querySelector('header').addEventListener('doubletap', function() {
+				//	if(contentWebview == null) {
+				//		contentWebview = plus.webview.currentWebview().children()[0];
+				//	}
+				//	contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0, 0, 100)");
+				//});
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

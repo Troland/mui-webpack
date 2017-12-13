@@ -1,0 +1,81 @@
+#my-funds {
+	background-color: #1E74DC;
+}
+
+#header {
+	height: auto;
+	-webkit-box-shadow: none;
+	border-bottom: 1px solid #ddd;
+	padding: 0;
+	color: #000;
+	line-height: 21px;
+	margin-bottom: 10px;
+}
+
+#header .total {
+	background-color: #1E74DC;
+	text-align: center;
+	padding: 10px 16px;
+	color: #FFFFFF
+}
+
+#header .total p {
+	color: #FFFFFF;
+	line-height: 22px;
+	font-size: 14px;
+	margin: 20px 0 0 0;
+}
+
+#header .total p:first-child {
+	font-size: 44px;
+}
+
+#header .total p.sum {
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+#header .total-tools {
+	height: auto;
+	overflow: hidden;
+	background-color: #fff;
+	text-align: center;
+	padding: 10px 0;
+}
+
+#header .total-tools div.mui-table div {
+	width: 50%;
+	float: left;
+	line-height: 24px;
+	font-size: 18px;
+	color: #000000;
+	border-left: dashed 1px #D2D2D2;
+}
+
+#header .total-tools div p {
+	width: 100%;
+}
+
+#header .total-tools p:first-child {
+	color: #1E74DC;
+}
+
+#list-table .title {
+	margin: 20px 15px 7px;
+	color: #6d6d72;
+	font-size: 15px;
+}
+
+#list-table div p {
+	color: #000000;
+}
+
+#list-table div p.weight-5 {
+	font-weight: 500;
+}
+
+#list-data li i {
+	position: absolute;
+	color: #E44346;
+	top: 20px;
+}

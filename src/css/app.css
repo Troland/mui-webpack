@@ -1,0 +1,99 @@
+/*
+ *这是单独为hello mui准备的个性化css，可以覆盖标准mui的css定义；
+ * 在实际项目开发时，建议为App单独写一个css文件，从而实现项目的自定义皮肤功能；
+ * */
+/*------------------------------ reset mui------------------------------*/
+html,body,.mui-content{
+	color:#444444;
+	font-size:16px;
+	background-color: #f8f8f8;
+	font-family: STHeiti, "Helvetica Neue LT Pro","HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+.mui-content>.mui-table-view:first-child {margin-top: 0;}
+.mui-bar .mui-title{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px;
+}
+.mui-bar .mui-title,.mui-bar a {
+	color:#F3F3F3;
+}
+
+.mui-bar{
+	height:44px;
+	line-height:44px;
+	background-color: #E44346;
+	color:#fff;
+	padding-right: 20px;
+	padding-left: 20px;
+}
+.blue-bar{
+	background-color: #1E74DC;
+}
+.mui-bar-nav {
+	top: 0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+.mui-bar-tab{
+	height: 49px;
+	line-height: 1;
+	background: #F2F2F2;
+	border-top: solid 1px #D9D9DA;
+	-webkit-box-shadow: 0 1px 6px #CCCCCC;
+	-moz-box-shadow: 0 1px 6px #CCCCCC;
+	box-shadow: 0 1px 6px #CCCCCC;
+}
+.mui-content{
+	background-color: #f2f2f2;
+}
+.mui-slider-indicator {
+	/*bottom: 0;*/
+	line-height: initial;
+}
+.mui-slider-indicator .mui-indicator{
+	background-color: #DDD;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow: none;
+}
+.mui-slider-indicator .mui-active.mui-indicator{
+	background-color: #53c4b3;
+}
+
+.mui-navigate-right:after, .mui-push-left:after, .mui-push-right:after{
+	font-size: 18px;
+}
+
+.mui-table-view-cell.mui-active,
+.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active,
+.mui-table-view-cell>a:not(.mui-btn).mui-active{
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.mui-bar-tab .mui-tab-item.mui-active,
+.mui-bar-tab .mui-tab-item.mui-active .mui-tab-label{
+	color: #E44346;
+}
+.mui-input-group:before,
+.mui-input-group:after,
+.mui-input-group .mui-input-row:before,
+.mui-input-group .mui-input-row:after,
+.mui-table-view:before,
+.mui-table-view:after,
+.mui-table-view-cell:before,
+.mui-table-view-cell:after{
+	background-color: #eee !important;
+}
+.mui-bar .mui-action-back{
+	margin-right: 0;
+	margin-left: 0;
+	padding-right: 0;
+	padding-left: 0;
+}
+.back-btn {width: 44px;height: 44px;text-align: left;}
+.back-btn span {font-size: 30px;}
+.page-img {width: 30px !important;height: 30px !important;}

@@ -1,0 +1,20 @@
+
+gs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+images/.DS_Store
+images/Thumbs.db
+fabfile.py*
+unpackage/*
+Thumbs.db
+*.pyc
+
+node_modules/
+.vscode
+# dotenv environment variables file
+.env

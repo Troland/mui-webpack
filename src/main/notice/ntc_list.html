@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>开奖中心</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<style>
+			.nvtt {
+				width: 100%;
+				height: 100%;
+				color: #fff;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			.sdcontent {
+				width: 100%;
+				position: fixed;
+				top: 44px;
+				bottom: 0;
+				text-align: center;
+				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;
+				-ms-touch-action: pan-y cross-slide-y;
+				-ms-scroll-chaining: none;
+				-ms-scroll-limit: 0 50 0 50;
+			}
+			.immersed-header {
+				width: 100%;
+				height: 44px;
+				position: fixed;
+				top: 0;
+				left: 0;
+				font-size: 17px;
+				text-align: center;
+				line-height: 44px;
+				background: #D74B28;
+				/*background: -webkit-linear-gradient(top,rgba(215,75,40,1),rgba(215,75,40,0.8));*/
+				z-index: 9999;
+				/*border-bottom: 1px solid rgba(215,75,40,0.8);*/
+				-ms-touch-action: none;
+				box-sizing: content-box;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="immersed-header">
+			<div class="nvtt">开奖中心</div>
+		</header>
+		<div class="mui-content" id="content"></div>
+		<script type="text/javascript" src="../../js/immersed.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			//启用双击监听
+			var subPageTop = (44 + window.immersed) + 'px';
+			var subPageBotton = "0";
+			var subPages = [{
+				url: 'ntc_list_sub.html',
+				id: 'ntc-list-sub-html',
+				styles: {
+					top: subPageTop,
+					bottom: subPageBotton
+				}
+			}];
+			mui.init({
+				gestureConfig: {
+					doubletap: true
+				},
+				subpages: subPages
+			});
+
+			mui.plusReady(function() {
+				//变量定义
+				var contentWebview = null;
+				document.querySelector('header').addEventListener('doubletap', function() {
+					if(contentWebview == null) {
+						contentWebview = plus.webview.currentWebview().children()[0];
+					}
+					contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+				});
+			})
+		</script>

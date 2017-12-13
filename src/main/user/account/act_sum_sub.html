@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>我的账户</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/account/sum.css" />
+	</head>
+
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul id="header" class="mui-table-view set-list">
+					<li class="mui-table-view-cell total">
+						<p id="balance"></p>
+						<p class="sum">账户余额</p>
+					</li>
+					<li class="mui-table-view-cell total-tools">
+						<div class="mui-table">
+							<div class="mui-table-cell mui-text-center">
+								<p id="recharge" class="mui-h4">0</p>
+								<p class="mui-h5">充值</p>
+							</div>
+							<div class="mui-table-cell mui-text-center">
+								<p id="drawcash" class="mui-h4">0</p>
+								<p class="mui-h5">提现</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<div id="list-table">
+					<ul class="mui-table-view">
+						<li id="record" class="mui-table-view-cell">
+							<a class="mui-navigate-right" target="act_detail.html" target_id="act-detail-html">
+								<i class="mui-icon-extra mui-icon-extra-gold"></i> 我的账户明细
+							</a>
+						</li>
+						<li id="record" class="mui-table-view-cell">
+							<a class="mui-navigate-right" target="../withdraw/withdraw.html" target_id="withdraw-html">
+								<i class="mui-icon-extra mui-icon-extra-gold"></i> 提现明细
+							</a>
+						</li>
+						<li id="record" class="mui-table-view-cell">
+							<a class="mui-navigate-right" target="act_recharge_detail.html" target_id="act-recharge-detail-html">
+								<i class="mui-icon-extra mui-icon-extra-gold"></i> 充值明细
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				$.ready(function() {
+					mui.init({
+						swipeBack: true,
+						pullRefresh: {
+							container: '#pullrefresh',
+							down: {
+								callback: pulldownRefresh
+							}
+						}
+					});
+
+					var balanceObj  = doc.getElementById('balance');
+					var rechargeObj = doc.getElementById('recharge');
+					var drawcashObj = doc.getElementById('drawcash');
+					var plusready = function() {
+						ajaxDataInfo(function(result) {
+							pulldownRefresh(result);
+						});
+					}
+
+					document.addEventListener('plusready', plusready, false);
+
+					var pulldownRefresh = function(result) {
+						if(!isEmptyObject(result)) {
+							balanceObj.innerHTML = result.data.balance;
+							rechargeObj.innerHTML = result.data.total_recharge;
+							drawcashObj.innerHTML = result.data.total_drawcash;
+						}
+					}
+
+					var ajaxDataInfo = function(callback){
+						BDF.api('/user/User/getUserInfo', {'data': ''}, 
+							function (result) {
+					        		if(!isEmptyObject(result)){
+					        			if(result.status == '0'){
+					        				return callback(result);
+					        			}else{
+					        				plus.nativeUI.toast(result.msg);
+					        			}
+					        		}else{
+					        			plus.nativeUI.toast("网络错误，请联系管理员");
+					        		}
+							}
+						)
+					}
+					
+					//点击页面列表跳转至对应的页面
+					$("#list-table li").on("tap", "a", function() {
+						var target = this.getAttribute("target");
+						var target_id = this.getAttribute("target_id");
+						if(target && target_id) {
+							openWebview(target_id, target, {
+								extras: {}
+							});
+						}
+					});
+				})
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

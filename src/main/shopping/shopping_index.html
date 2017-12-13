@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>购买彩票</title>
+  <link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/app.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/shopping/index.css" />
+</head>
+
+<body>
+  <header class="mui-bar mui-bar-nav">
+    <a class="mui-pull-left back-btn" id="J_back"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title" id="J_title"><div class="select-box mui-pull-left" id="J_selBox"><label id="J_selRuleValue">定位胆</label><span class="select-box__arr"></span></div></h1><a id="J_assistant" href="javascript:void(0)" class="mui-pull-right">购彩助手</a>
+  </header>
+  <nav class="mui-bar mui-bar-footer">
+    <button type="button" class="action-btn action-btn_random mui-btn" id="J_random">机选</button>
+    <button type="button" class="action-btn action-btn_random mui-btn" style="display:none" id="J_clear">清空</button>
+    <div id="J_numbersContainer" class="numbers-container" style="display:none">
+      <div id="J_selnumbers" class="selNumbers"><span class="sel-number" id="J_tenthousandDigit"></span><span class="sel-number" id="J_thousandDigit"></span><span class="sel-number" id="J_hundredDigit"></span><span class="sel-number" id="J_tenDigit"></span><span class="sel-number" id="J_oneDigit"></span></div>
+      <p id="J_sum" class="total">共<strong id="J_count" class="bet-count"></strong>注<span class="total-amount"><em id="J_amount"></em>元</span></p>
+    </div>
+    <button class="action-btn action-btn_confirm mui-btn" id="J_confirm">确定</button>
+  </nav>
+  <div class="mui-content">
+    <div id="J_draw" class="mui-clearfix draw-info">
+      <!-- <div class="mui-pull-left drawPeriod-info">
+        <div class="drawPeriod-info__hd" id="J_prevPeroid">070期</div>
+        <div class="drawPeriod-info__bd" id="J_prevPeroidStatus">等待开奖</div>
+      </div> -->
+      <div class="drawPeriod-info">
+        <span class="drawPeriod-info__hd" id="J_nextPeroid"></span><span class="drawPeriod-info__bd" id="J_nextPeroidCountDown"></span>
+      </div>
+    </div>
+    <div id="J_his" class="draw-container">
+      <div class="drawContainer" id="J_drawContainer">
+        <div class="draw__hd mui-row">
+          <div class="mui-col-xs-6">期次</div>
+          <div class="mui-col-xs-6">开奖号码</div>
+        </div>
+        <div class="draw__bd">
+          <div id="J_drawList"></div>
+        </div>
+        <div class="draw__ft"><a href="javascript:void(0)" id="J_more" class="drawPeriod-more"><span class="mui-icon-extra mui-icon-extra-arrowrightcricle"></span>点击查看更多开奖历史</a></div>
+      </div>
+    </div>
+    <div class="mui-scroll-wrapper scroll-content" id="J_scroll">
+      <div class="mui-scroll">
+        <div class="draw-container__actions"><a id="J_toggleBtn" href="javascript:void(0);" class="btn-small"><span class="mui-icon mui-icon-arrowdown"></span></a></div>
+        <div id="J_actions" class="action-group mui-clearfix">
+          <a href="javascript:void(0)" style="display:none" class="mui-pull-left">摇一摇</a><span class="mui-pull-right emphasize balance">余额:<strong id="J_balance">0</strong>元</span>
+        </div>
+        <section class="lottery-select__hd">
+          <div class="lottery-expect-info"></div>
+          <div class="lottery-his"></div>
+          <div class="lottery-action-btn__group"></div>
+        </section>
+        <section class="lottery-select__bd">
+          <div class="lottery-gameplay" id="J_gameplay"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div id="J_ruleContainer" class="pop-modal" style="display: none">
+    <div class="popup-overlay" id="J_overlay"></div>
+    <div class="pop__content">
+      <div class="rules-inner">
+        <h2 class="rules__hd">选择玩法</h2>
+        <div class="rules__bd">
+          <div class="rules-container" id="J_rulesContainer">
+              <div class="rule__title" id="J_selRule"></div>
+              <div class="rules mui-row" id="J_rules"></div>
+          </div>
+          <div class="subRules-container" id="J_subRulesContainer">
+            <div class="rule__title" id="J_selSubrule"></div>
+            <div class="subRules mui-row" id="J_subRules"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--右上角弹出菜单-->
+  <div id="helpPopover" class="mui-popover">
+    <div class="mui-popover-arrow"></div>
+    <div class="mui-scroll-wrapper">
+      <div class="mui-scroll">
+        <ul class="mui-table-view">
+          <li class="mui-table-view-cell"><a href="javascript:void(0)" data-link="../user/order/ord_list.html" data-id="ord-list-html">投注记录</a></li>
+          <li class="mui-table-view-cell"><a href="javascript:void(0)" data-link="../notice/notice_list.html" data-id="notice-list-html">开奖历史</a></li>
+          <li class="mui-table-view-cell"><a href="javascript:void(0)" data-link="" data-id="">走势图</a></li>
+          <li class="mui-table-view-cell"><a href="javascript:void(0)" data-link="../product/prd_rules.html" data-id="prd-rules-html">玩法说明</a></li>
+          <li class="mui-table-view-cell"><a href="javascript:void(0)" id="J_collect">收藏彩票</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script type="text/template" id="draw-tpl">
+    {{each draws draw i}}
+    <div class="draw-item mui-row">
+      <div class="mui-col-xs-3"><div class="draw-item__hd">第{{ draw.expect.slice(-3) }}期</div></div>
+      <div class="mui-col-xs-9">
+        {{each draw.winningNumbers number i}}
+          <span class="winningNumber">{{ number }}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </script>
+  <script type="text/template" id="rule-tpl">
+    {{each rules rule i}}
+      <div class="mui-col-xs-4 rule-item"><button class="rule-item__btn {{if (i === 0)}}rule-item__btn_active{{/if}}" data-rid="{{rule.rule_id}}" data-rname="{{rule.rule_name}}">{{ rule.rule_name }}</button></div>
+    {{/each}}
+  </script>
+  <script type="text/template" id="subRule-tpl">
+    {{each rules rule i}}
+      <div class="mui-col-xs-4 rule-item"><button class="rule-item__btn {{if (i === 0)}}rule-item__btn_active{{/if}}" data-rname="{{rule.play_rule_name}}" data-rid="{{rule.play_rule_id}}">{{rule.play_rule_name}}</button></div>
+    {{/each}}
+  </script>
+  <!-- 定位胆模板 -->
+  <script type="text/template" id="positioningbile-tpl">
+    {{each content.digits digit i}}
+      <div class="gameplay-row mui-row" data-digit="{{ digit.value }}">
+        <label for="" class="mui-col-xs-1">{{ digit.name }}</label>
+        <div class="gameplay__bd mui-col-xs-11">
+          <h3 class="gameplay__title mui-row">
+            <div class="quickpick_item mui-col-xs-2" data-action="all">全</div>
+            <div class="quickpick_item mui-col-xs-2" data-action="big">大</div>
+            <div class="quickpick_item mui-col-xs-2" data-action="small">小</div>
+            <div class="quickpick_item mui-col-xs-2" data-action="single">单</div>
+            <div class="quickpick_item mui-col-xs-2" data-action="double">双</div>
+            <div class="quickpick_item mui-col-xs-2" data-action="clear">清</div>
+          </h3>
+          <div class="gameplay__content">
+            <div class="mui-row">
+              {{each content.numbers number i}}
+              <div class="mui-col-xs-2"><span class="number__item" data-value="{{ number }}">{{ number }}</span></div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </script>
+  <!-- 三星直选模板 -->
+  <script type="text/template" id="threestars-tpl">
+
+  </script>
+  <!-- 三星组三 -->
+  <script type="text/template" id="threestars2-tpl">
+
+  </script>
+  <!-- 大小单双 -->
+  <script type="text/template" id="dxds-tpl">
+    {{each content.digits digit i}}
+      <div class="gameplay-row mui-row" data-digit="{{ digit.value }}">
+        <label for="" class="mui-col-xs-1">{{ digit.name }}</label>
+        <div class="gameplay__bd mui-col-xs-11">
+          <div class="gameplay__content">
+            <div class="mui-row">
+              {{each content.numbers number i}}
+                <div class="mui-col-xs-2"><span class="number__item" data-value="{{ number }}">{{ number }}</span></div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </script>
+  <script type="text/template" id="J_ruletpl4">
+
+  </script>
+  <script type="text/template" id="J_ruletpl4">
+
+  </script>
+  <script type="text/template" id="longhu-tpl">
+    {{each content.digits digit i}}
+      <div class="gameplay-row mui-row longhu-row" data-digit="{{ digit.value }}">
+        <div for="" class="mui-col-xs-2">
+          <div>{{ digit.name }}</div>
+          <div>赔率</div>
+        </div>
+        <div class="gameplay__bd mui-col-xs-10">
+          <div class="gameplay__content">
+            <div class="mui-row">
+              {{each content.numbers number i}}
+                <div class="mui-col-xs-4">
+                  <span class="number__item" data-value="{{ number }}">{{ number }}</span>
+                  <p>1.98</p>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </script>
+  <script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="UTF-8">
+    (function($, doc) {
+      $.init();
+      // 每注价格
+      var pricePerBet = 2;
+      var isLogged = !!localStorage.getItem('$localUser');
+      var oddNumbers = [1, 3, 5, 7, 9], evenNumbers = [0, 2, 4, 6, 8];
+      var gameplays = [
+        {
+          name: "定位胆",
+          hasChild: false,
+          content: {
+            digits: [
+              {
+                name: "万位",
+                value: "tenthousandDigit"
+              },
+              {
+                name: "千位",
+                value: "thousandDigit"
+              },
+              {
+                name: "百位",
+                value: "hundredDigit"
+              },
+              {
+                name: "十位",
+                value: "tenDigit"
+              },
+              {
+                name: "个位",
+                value: "oneDigit"
+              }
+            ],
+            numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            minNumber: 0,
+            maxNumber: 10
+          }
+        },
+        {
+          name: "五星",
+
+        }
+      ];
+
+      // H5+加载完毕
+      // $.plusReady(function() {
+      //   var favourites;
+      //   webView = plus.webview.currentWebview();
+      //   lotteryType = webView.lotteryType;
+      //   // 检测是否登录
+      //   if (isLogged) {
+      //     userInfo = JSON.parse(localStorage.getItem('$localUser'));
+      //     $balance.innerHTML = userInfo.balance;
+      //     favourites = userInfo.collect.split(',');
+      //     if (favourites.indexOf(lotteryType) > -1) {
+      //       $collect.innerHTML = '取消收藏';
+      //       $collect.setAttribute('data-isfavourited', '1');
+      //     } else {
+      //       $collect.innerHTML = '收藏彩票';
+      //       $collect.setAttribute('data-isfavourited', '0');
+      //     }
+      //   }
+      // });
+      $.plusReady(function () {
+        var webView = plus.webview.currentWebview(),
+          prevPeroid,
+          nextPeroid,
+          selectedSubRule = null,
+          selectedRule = null,
+          lotteryType = webView.lotteryType,
+          prevPeroidTimer = null,
+          nextPeroidTimer = null,
+          $gameplay = document.getElementById('J_gameplay'),
+          // $prevPeroidStatus = document.getElementById('J_prevPeroidStatus'),
+          // $prevPeroid = document.getElementById('J_prevPeroid'),
+          $nextPeroid = document.getElementById('J_nextPeroid'),
+          $nextPeroidStatus = document.getElementById('J_nextPeroidCountDown'),
+          $helpPopover = document.getElementById('helpPopover'),
+          $selNumberContainer = document.getElementById('J_numbersContainer'),
+          $digitItems = $selNumberContainer.querySelectorAll('.sel-number'),
+          $randomBtn = document.getElementById('J_random'),
+          $confirmBtn = document.getElementById('J_confirm'),
+          $assistantBtn = document.getElementById('J_assistant'),
+          $betCount = document.getElementById('J_count'),
+          $clearBtn = document.getElementById('J_clear'),
+          $backBtn = document.getElementById('J_back'),
+          $betAmount = document.getElementById('J_amount'),
+          $toggleBtn = document.getElementById('J_toggleBtn'),
+          $drawHis = document.getElementById('J_drawContainer'),
+          $drawPeroids = document.getElementById('J_drawList'),
+          $moreBtn = document.getElementById('J_more'),
+          $balance = document.getElementById('J_balance'),
+          $collect = document.getElementById('J_collect'),
+          $selRuleBox = document.getElementById('J_selBox'),
+          $rulePop = document.getElementById('J_ruleContainer'),
+          $selRuleValue = document.getElementById('J_selRuleValue'),
+          $selRule = document.getElementById('J_selRule'),
+          $selSubRule = document.getElementById('J_selSubrule'),
+          $rules = document.getElementById('J_rules'),
+          $subRules = document.getElementById('J_subRules'),
+          $popOverlay = document.getElementById('J_overlay'),
+          ruleTplMap = [
+            {
+              subRules: [
+                '定位胆-定位胆',
+                '五星-五星通选',
+                '五星-五星直选',
+                '任选二-直选复式',
+                '任选二-直选复式',
+                '任选三-直选复式',
+                '任选四-直选复式',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "万位",
+                    value: "tenthousandDigit"
+                  },
+                  {
+                    name: "千位",
+                    value: "thousandDigit"
+                  },
+                  {
+                    name: "百位",
+                    value: "hundredDigit"
+                  },
+                  {
+                    name: "十位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "个位",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                minNumber: 0,
+                maxNumber: 10
+              },
+              validator: ''
+            },
+            {
+              subRules: ['三星-三星直选'],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "百位",
+                    value: "hundredDigit"
+                  },
+                  {
+                    name: "十位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "个位",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                minNumber: 0,
+                maxNumber: 10
+              },
+              validator: ''
+            },
+            {
+              subRules: ['三星-三星组三', '三星-三星组六', '二星-二星组选', '任选三-组六复式', '任选三-组三复式'],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "选号",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                minNumber: 0,
+                maxNumber: 10
+              },
+              validator: ''
+            },
+            {
+              subRules: ['二星-二星直选'],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "十位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "个位",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                minNumber: 0,
+                maxNumber: 10
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-后二大小单双', '大小单双-前二大小单双'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "十位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "个位",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-后三大小单双', '大小单双-前三大小单双'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "万位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "千位",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "百位",
+                    value: "oneDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-万位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "万位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-千位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "千位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-百位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "百位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-百位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "百位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-个位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "个位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: ['大小单双-个位'],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "个位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双']
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '不定位-前三一码',
+                '不定位-前三二码',
+                '不定位-后三一码',
+                '不定位-后三二码',
+                '不定位-前四一码',
+                '不定位-前四二码',
+                '不定位-后四一码',
+                '不定位-后四二码',
+                '不定位-五星一码',
+                '不定位-五星二码',
+                '不定位-五星三码',
+              ],
+              tpl: 'dxds-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "不定位",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选二-直选和值',
+                '任选二-组选和值',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "和值",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选二-组选复式'
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "组选",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选三-直选和值',
+                '任选三-组选和值',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "和值",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+                ],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选四-组选24',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "组选24",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选四-组选12',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "二重号",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "单号",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选四-组选6',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "二重号",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '任选四-组选4',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "三重号",
+                    value: "tenDigit"
+                  },
+                  {
+                    name: "单号",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '龙虎-总和',
+              ],
+              tpl: 'positioningbile-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "总和",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双'],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '龙虎-总和', '龙虎-万千', '龙虎-万百', '龙虎-万十', '龙虎-万个', '龙虎-千百', '龙虎-千十',
+                '龙虎-千个', '龙虎-百十', '龙虎-百个', '龙虎-十个'
+              ],
+              tpl: 'longhu-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "龙虎",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['大', '小', '单', '双'],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '顺子-前三球'
+              ],
+              tpl: 'longhu-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "前三",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '顺子-中三球'
+              ],
+              tpl: 'longhu-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "中三",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '顺子-后三球'
+              ],
+              tpl: 'longhu-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "后三",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+              },
+              validator: ''
+            },
+            {
+              subRules: [
+                '斗牛-斗牛'
+              ],
+              tpl: 'longhu-tpl',
+              content: {
+                digits: [
+                  {
+                    name: "斗牛",
+                    value: "tenDigit"
+                  }
+                ],
+                numbers: ['牛牛', '牛九', '牛八', '牛七', '牛六', '牛五', '牛四', '牛三', '牛二', '牛一', '无牛']
+              },
+              validator: ''
+            }
+          ];
+
+        var favourites, userInfo, html, rules, subRules;
+        webView = plus.webview.currentWebview();
+
+        $('.mui-scroll-wrapper').scroll({
+        	deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+
+        // 截止开奖期数倒计时
+        function countDownOpenDueDate(dueTime) {
+
+        }
+        // $prevPeroidStatus = document.getElementById('J_prevPeroidStatus'),
+        // $prevPeroid = document.getElementById('J_prevPeroid'),
+        // $nextPeroid = document.getElementById('J_nextPeroid'),
+        // $nextPeroidStatus = document.getElementById('J_nextPeroidCountDown'),
+        // "expect": "20171118052",  //下一期
+        // "plan_open_time": "1510987200000", //毫秒
+        // "last_expect": "20171118051", //上一期
+        // "last_open_code": "5,6,7,8,9",
+        // 查询最新彩票
+        //
+        prevPeroid = '20171118051';
+        nextPeroid = '20171118052';
+        var duration = 97956;
+
+        function padding(number) {
+          return number < 10 ? '0' + number : '' + number;
+        }
+
+        // 显示时间
+        function showTime(timestamp) {
+          var hour = Math.floor(timestamp / 1000 / 60 / 60),
+            minute = Math.floor( (timestamp - hour * 60 * 60 * 1000) / 1000 / 60),
+            second = Math.floor( (timestamp - hour * 60 * 60 * 1000 - minute * 60 * 1000) / 1000);
+
+          $nextPeroidStatus.innerHTML = padding(hour) + ':' + padding(minute) + ':' + padding(second);
+        }
+
+        showTime(duration);
+        queryLastPeroid();
+        // 下一期倒计时
+        function queryLastPeroid() {
+          nextPeroidTimer = setInterval(function () {
+            duration = duration - 1000;
+            if (duration < 0) {
+              clearInterval(nextPeroidTimer);
+              // BDF.api
+            } else {
+              showTime(duration);
+            }
+          }, 1000);
+        }
+
+        queryPrevPeroid();
+        // 查询上一期彩票
+        // Todo: 这里得在请求完最新一期开奖信息之后再去请求上一期的信息
+        function queryPrevPeroid(peroid) {
+          prevPeroidTimer = setInterval(function () {
+            BDF.api('/iletou/result/getDetail', {
+              'type': 'POST',
+              'data': {
+                crossDomain: true,
+                id: lotteryType,
+                expect: peroid
+              }
+            }, function(res) {
+              if (res.status === '0') {
+                if (res.data.length) {
+                  // $prevPeroidStatus.innerHTML = res.data.number.split(' ').join(',');
+                } else {
+                  // $prevPeroidStatus.innerHTML = '未开奖';
+                }
+              } else {
+                $.toast(res.msg);
+              }
+            });
+          }, 12000);
+        }
+
+        // $prevPeroid.innerHTML = prevPeroid.slice(-3) + '期';
+        // $prevPeroidStatus.innerHTML = '';
+        $nextPeroid.innerHTML = '距' + nextPeroid.slice(-3) + '期截止：';
+        // BDF.api('/vdd/Lott/getPrepareOpenLott', {
+        //
+        // })
+
+        // 请求玩法
+        BDF.api('/vdd/Category/getAllRulePlay', {
+          'type': 'POST',
+          'data': {
+            crossDomain: true,
+            category_id: lotteryType
+          }
+        }, function (res) {
+          if (res.status === '0') {
+            rules = res.data.items;
+            $rules.innerHTML = template('rule-tpl', {rules: rules});
+            selectedRule = rules[0];
+            selectedSubRule = rules[0].items[0];
+            $subRules.innerHTML = template('subRule-tpl', {rules: selectedRule.items});
+
+            $selRule.innerHTML = selectedRule.rule_name;
+            $selSubRule.innerHTML = selectedSubRule.play_rule_name;
+            $selRuleValue.innerHTML = selectedRule.rule_name + '-' + selectedSubRule.play_rule_name;
+            renderRuleTpl(selectedRule.rule_name + '-' + selectedSubRule.play_rule_name);
+          } else {
+            $.toast(res.msg);
+          }
+        });
+
+        // 检测是否登录
+        if (isLogged) {
+          userInfo = JSON.parse(localStorage.getItem('$localUser'));
+          $balance.innerHTML = userInfo.balance;
+          favourites = userInfo.collect ? userInfo.collect.split(',') : [];
+          if (favourites.indexOf(lotteryType) > -1) {
+            $collect.innerHTML = '取消收藏';
+            $collect.setAttribute('data-isfavourited', '1');
+          } else {
+            $collect.innerHTML = '收藏彩票';
+            $collect.setAttribute('data-isfavourited', '0');
+          }
+        }
+
+        // renderRuleTpl(selectedRule.rule_name + '-' + ruleName);
+
+        // $gameplay.innerHTML = template('positioningbile-tpl', gameplays[0]);
+        // 寻找元素最近的选择器的元素
+        function findClosestNode(node, selector) {
+          var elem = null;
+          // 判断是否类名
+          var isClass = selector[0] === '.' ? true : false;
+          var selector = selector.slice(1);
+          while (node = node.parentNode) {
+            if (isClass) {
+              if (node.classList.toString().indexOf(selector) > -1) {
+                elem = node;
+                break;
+              }
+            } else {
+              if (node.getAttribute('id') === selector) {
+                elem = node;
+                break;
+              }
+            }
+          }
+
+          return elem;
+        }
+
+        // 获取兄弟元素
+        function getSiblings(el) {
+          var siblings = Array.prototype.filter.call(el.parentNode.children, function(child){
+            return child !== el;
+          });
+
+          return siblings;
+        }
+
+        // toggleClass selected
+        function toggleClass(dom, className, selected) {
+          var args = Array.prototype.slice.apply(arguments);
+          if (args.length > 2) {
+            if (selected) {
+              if (!BDF.hasClass(dom, className)) {
+                BDF.addClass(dom, className);
+              }
+            } else {
+              BDF.removeClass(dom, className);
+            }
+          } else {
+            // var classNames = dom.className
+            BDF.toggleClass(dom, className);
+          }
+        }
+
+        // render selected number
+        function render($container, $target) {
+          var $numbers = $container.querySelectorAll('.number__item'),
+            $totalSelNumbers = $gameplay.querySelectorAll('.number__item_active'),
+            selNumbers = [], i;
+
+          for (i = 0; i < $numbers.length; i++) {
+            if (BDF.hasClass($numbers[i], 'number__item_active')) {
+              selNumbers.push($numbers[i].getAttribute('data-value'));
+            }
+          }
+          $target.innerHTML = selNumbers.join(' ');
+          // 全部的选中号码
+          if ($totalSelNumbers.length) {
+            $selNumberContainer.style.display = 'block';
+            $betCount.innerHTML = $totalSelNumbers;
+            $clearBtn.style.display = '';
+            $randomBtn.style.display = 'none';
+          } else {
+            $selNumberContainer.style.display = 'none';
+            $clearBtn.style.display = 'none';
+            $randomBtn.style.display = '';
+          }
+          $betCount.innerHTML = $totalSelNumbers.length;
+          $betAmount.innerHTML = $totalSelNumbers.length * pricePerBet;
+        }
+
+        // 重置购彩页面
+        function refresh() {
+          var $quickItems = $gameplay.querySelectorAll('.quickpick_item'),
+            $numbers = $gameplay.querySelectorAll('.number__item');
+
+          $.each($quickItems, function(index, el) {
+            el.classList.remove('quickpick_item_active');
+          });
+
+          $.each($numbers, function(index, el) {
+            el.classList.remove('number__item_active');
+          });
+
+          $.each($digitItems, function(index, el) {
+            el.innerHTML = '';
+          });
+
+          $betCount.innerHTML = '';
+          $betAmount.innerHTML = '';
+
+          $selNumberContainer.style.display = 'none';
+        }
+
+        // 获得投注信息
+        function getBetInfo() {
+          var bets = 0;
+          var pricePerBet = 2;
+          var totalFee = 0;
+          var selNumbers = [];
+          // 每个位数上获得其选中的号码
+          $.each(document.querySelectorAll('.gameplay-row'), function (index, row) {
+            var $selNumbers = row.querySelectorAll('.number__item_active'), numbers = [];
+            if ($selNumbers.length) {
+              bets += $selNumbers.length;
+              totalFee += $selNumbers.length * pricePerBet;
+              $.each($selNumbers, function (index, el) {
+                numbers.push(el.getAttribute('data-value'));
+              });
+              selNumbers.push(numbers.join(''));
+            } else {
+              selNumbers.push('');
+            }
+          });
+
+          return {
+            play_rule_id: selectedSubRule.play_rule_id,
+            betCount: bets,
+            totalFee: pricePerBet * bets,
+            selNumbers: selNumbers,
+            rule: '定位胆',
+            subRule: '定位胆'
+          }
+        };
+
+        // 玩法选择
+        $selRuleBox.addEventListener('tap', function (e) {
+          $rulePop.style.display = '';
+        }, false);
+
+        // 购彩助手
+        $assistantBtn.addEventListener('tap', function (e) {
+          var options = {
+            id: 'prd-rules-html',
+            url: '../product/prd_rules.html',
+            extras: {
+              lotteryType: lotteryType
+            }
+          };
+          $.openWindow(options);
+        }, false);
+
+        $popOverlay.addEventListener('tap', function (e) {
+          $rulePop.style.display = 'none';
+        }, false);
+
+        // 玩法点击
+        $('#J_rules').on('tap', '.rule-item button', function (e) {
+          if (this.classList.contains('rule-item__btn_active')) {
+            return;
+          }
+          var ruleId = +this.getAttribute('data-rid'),
+            $siblings = getSiblings(this.parentNode),
+            subRules;
+
+          selectedRule = selectedRule = rules.find(function (rule) {
+            return rule.rule_id == ruleId;
+          });
+          selectedSubRule = selectedRule.items[0];
+          subRules = selectedRule.items;
+          this.classList.toggle('rule-item__btn_active');
+          $siblings.forEach(function (el) {
+            el.querySelector('.rule-item__btn').classList.remove('rule-item__btn_active');
+          });
+          $subRules.innerHTML = template('subRule-tpl', {rules: subRules});
+
+          $selRule.innerHTML = selectedRule.rule_name;
+          $selSubRule.innerHTML = selectedSubRule.play_rule_name;
+          $selRuleValue.innerHTML = selectedRule.rule_name + '-' + selectedSubRule.play_rule_name;
+
+          renderRuleTpl(selectedRule.rule_name + '-' + subRules[0].play_rule_name);
+        });
+
+        // 子玩法点击
+        $('#J_subRules').on('tap', '.rule-item button', function (e) {
+          if (this.classList.contains('rule-item__btn_active')) {
+            return;
+          }
+          var subRuleId = +this.getAttribute('data-rid'),
+            ruleName = this.getAttribute('data-rname'),
+            $siblings = getSiblings(this.parentNode);
+
+          selectedSubRule = selectedRule.items.find(function (item) {
+            return item.play_rule_id === subRuleId;
+          });
+
+          $siblings.forEach(function (el) {
+            el.querySelector('.rule-item__btn').classList.remove('rule-item__btn_active');
+          });
+          this.classList.toggle('rule-item__btn_active');
+
+          $selSubRule.innerHTML = selectedSubRule.play_rule_name;
+          $selRuleValue.innerHTML = selectedRule.rule_name + '-' + selectedSubRule.play_rule_name;
+          renderRuleTpl(selectedRule.rule_name + '-' + ruleName);
+          $rulePop.style.display = 'none';
+        });
+
+        // 渲染玩法
+        function renderRuleTpl(ruleName) {
+          var ruleItem = ruleTplMap.find(function (rule) {
+            return rule.subRules.indexOf(ruleName) > -1;
+          });
+          $gameplay.innerHTML = template(ruleItem.tpl, ruleItem);
+        }
+
+        // 重置购彩页面
+        $clearBtn.addEventListener('tap', function (e) {
+          refresh();
+          this.style.display = 'none';
+          $randomBtn.style.display = '';
+        }, false);
+
+        // 更多开奖历史
+        $moreBtn.addEventListener('tap', function () {
+          console.log('Type:', lotteryType);
+          console.log('Type:', typeof lotteryType);
+          $.openWindow({
+            id: 'notice-list-html',
+            url: '../notice/notice_list.html',
+            extras: {
+              lotteryType: lotteryType + ''
+            }
+          });
+        }, false);
+
+        // 购彩助手
+        $('#helpPopover').on('tap', '.mui-table-view-cell a', function (e) {
+          var target = e.target,
+            isRedirect = !!this.getAttribute('data-link'),
+            url, webviewId, options;
+
+          // 判断是否是收藏彩票
+          if (isRedirect) {
+            url = this.getAttribute('data-link');
+            webviewId = this.getAttribute('data-id');
+            options = {
+              id: webviewId,
+              url: url
+            };
+            if (webviewId === 'notice-list-html') {
+              options.extras = {
+                lotteryType: lotteryType
+              };
+            }
+            if (webviewId === 'prd-rules-html') {
+              options.extras = {
+                lotteryType: lotteryType
+              };
+            }
+            $.openWindow(options);
+            $('#helpPopover').popover('hide');
+          } else {
+            // action 0: 未收藏, 1: 已收藏
+            var action = target.getAttribute('data-isfavourited'),
+              collectUrl = (action === '0' ? '/user/Collect/addCollect' : '/user/Collect/concelCollect');
+
+            if (!isLogged) {
+              $.toast('请先登录');
+              return;
+            } else {
+              BDF.api(collectUrl, {
+                'type': 'POST',
+                'data': {
+                  crossDomain: true,
+                  lott_id: lotteryType,
+                  token: JSON.parse(localStorage.getItem('$state')).token
+                }
+              }, function (res) {
+                if (res.status === '0') {
+                  var userInfo = JSON.parse(localStorage.getItem('$localUser')),
+                    favourites = userInfo.collect ? userInfo.collect.split(',') : [];
+
+                  if (action === '0') {
+                    $.toast('已收藏');
+                    target.innerHTML = '取消收藏';
+                    target.setAttribute('data-isfavourited', '1');
+                    favourites.push(lotteryType);
+                  } else {
+                    $.toast('已取消');
+                    target.innerHTML = '收藏彩票';
+                    target.setAttribute('data-isfavourited', '0');
+                    favourites = favourites.filter(function (v) {
+                      return v != lotteryType;
+                    });
+                  }
+
+                  userInfo.collect = favourites.join(',');
+                  console.log('UserInfo:', JSON.stringify(userInfo));
+                  localStorage.setItem('$localUser', JSON.stringify(userInfo));
+                } else {
+                  $.toast(res.msg);
+                }
+                $('#helpPopover').popover('hide');
+              });
+            }
+          }
+        });
+
+        // 开奖历史记录
+        BDF.api('/iletou/result/getHistory', {
+          'type': 'POST',
+          'data': {
+            crossDomain: true,
+            id: lotteryType,
+            page: 1,
+            var_page: 10
+          }
+        }, function(res) {
+          if (res.status === '0') {
+            var items = res.data.items;
+            items.forEach(function (item, index) {
+              item.winningNumbers = item.open_code.split(',');
+            });
+            $drawPeroids.innerHTML = template('draw-tpl', {draws: items})
+          } else {
+            $.toast(res.msg);
+          }
+        });
+
+        // 开奖记录toggle
+        $toggleBtn.addEventListener('tap', function (e) {
+          if ($drawHis.style.display == 'none') {
+            $drawHis.style.display = '';
+          } else {
+            $drawHis.style.display = 'none';
+          }
+        }, false);
+
+        // 点击快速选择号码
+        // 全：全选数字，大：>= 5, 小：< 5， 单：1, 3, 5, 7, 9，双：０, 2, 4, 6, 8
+        $('#J_gameplay').on('tap', '.gameplay-row .quickpick_item', function (index, el) {
+          var self = this,
+            action = this.getAttribute('data-action'),
+            $row = findClosestNode(this, '.gameplay-row'),
+            digitValue = $row.getAttribute('data-digit'),
+            $targetDigit = document.getElementById('J_' + digitValue),
+            $numbers = $row.querySelectorAll('.number__item'),
+            isSelected;
+
+          this.classList.toggle('quickpick_item_active');
+          isSelected = this.classList.contains('quickpick_item_active');
+
+          $.each($row.querySelectorAll('.quickpick_item'), function (index, el) {
+            if (el != self) {
+              el.classList.remove('quickpick_item_active');
+            }
+          });
+
+          switch (action) {
+            case 'all':
+              $.each($numbers, function (index, el) {
+                el.classList.toggle('number__item_active', isSelected);
+              });
+              break;
+            case 'big':
+              $.each($numbers, function (index, el) {
+                var value = +(el.getAttribute('data-value'));
+                if (value >= 5) {
+                  el.classList.toggle('number__item_active', isSelected);
+                } else {
+                  el.classList.remove('number__item_active');
+                }
+              });
+              break;
+            case 'small':
+              $.each($numbers, function (index, el) {
+                var value = +(el.getAttribute('data-value'));
+                if (value < 5) {
+                  el.classList.toggle('number__item_active', isSelected);
+                } else {
+                  el.classList.remove('number__item_active');
+                }
+              });
+              break;
+            case 'single':
+              $.each($numbers, function (index, el) {
+                var value = +(el.getAttribute('data-value'));
+                if (oddNumbers.indexOf(value) > -1) {
+                  el.classList.toggle('number__item_active', isSelected);
+                } else {
+                  el.classList.remove('number__item_active');
+                }
+              });
+              break;
+            case 'double':
+              $.each($numbers, function (index, el) {
+                var value = +(el.getAttribute('data-value'));
+                if (evenNumbers.indexOf(value) > -1) {
+                  el.classList.toggle('number__item_active', isSelected);
+                } else {
+                  el.classList.remove('number__item_active');
+                }
+              });
+              break;
+            case 'clear':
+              $.each($numbers, function (index, el) {
+                var value = +(el.getAttribute('data-value'));
+                el.classList.remove('number__item_active');
+              });
+              break;
+          }
+
+          // 渲染已选注信息
+          render($row, $targetDigit);
+        });
+
+        // 返回
+        $backBtn.addEventListener('tap', function () {
+          var btnArray = ['是', '否'];
+          // 判断有无购彩记录
+          if (localStorage.getItem('bets') && JSON.parse(localStorage.getItem('bets')).length) {
+            $.confirm('退出将删除已选彩票，确认退出？', '确认退出', btnArray, function (e) {
+              if (e.index == 0) {
+                localStorage.removeItem('bets');
+                $.back();
+              }
+            })
+          } else {
+            $.back();
+          }
+        }, false);
+
+        // 确认
+        $confirmBtn.addEventListener('tap', function () {
+          var betInfo = getBetInfo(), bets;
+
+          if (!betInfo.betCount) {
+            $.toast('请选择号码');
+            return;
+          }
+
+          $randomBtn.style.display = '';
+          $clearBtn.style.display = 'none';
+
+          // 已选号码存入localStorage
+          if (!localStorage.getItem('bets') || !(JSON.parse(localStorage.getItem('bets')).length)) {
+            bets = [betInfo];
+            localStorage.setItem('bets', JSON.stringify(bets))
+          } else {
+            bets = JSON.parse( localStorage.getItem('bets') );
+            bets.unshift(betInfo);
+            localStorage.setItem('bets', JSON.stringify(bets))
+          }
+
+          // 清空已选号码
+          refresh();
+
+          $.openWindow({
+            url: '../product/prd_buy.html',
+            id: 'prd-buy-html',
+            extras: {
+              lotteryType: lotteryType
+            }
+          });
+        }, false);
+
+        // 机选
+        $randomBtn.addEventListener('tap', function () {
+          $.openWindow({
+            url: '../product/prd_buy.html',
+            id: 'prd-buy-html'
+          });
+        }, false);
+
+        // 选择号码
+        $('#J_gameplay').on('tap', '.gameplay__content .number__item', function (e) {
+          var number = this.getAttribute('data-value'),
+            $row = findClosestNode(this, '.gameplay-row'),
+            digitValue = $row.getAttribute('data-digit'),
+            classList = this.classList.value,
+            $targetDigit = document.getElementById('J_' + digitValue);
+
+          BDF.toggleClass(this, 'number__item_active');
+          render($row, $targetDigit);
+        });
+      });
+    })(mui, document);
+  </script>
+</body>
+
+</html>

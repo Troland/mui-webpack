@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>个人中心</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/user.css" />
+		<style>
+		.nvtt {
+			width: 100%;
+			height: 100%;
+			color: #fff;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			white-space:nowrap;
+		}
+		.sdcontent {
+			width: 100%;
+			position: fixed;
+			top: 44px;
+			bottom: 0;
+			text-align: center;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+			-ms-touch-action: pan-y cross-slide-y;
+			-ms-scroll-chaining: none;
+			-ms-scroll-limit: 0 50 0 50;
+		}
+		.immersed-header {
+			width: 100%;
+			height: 44px;
+			position: fixed;
+			top: 0;
+			left: 0;
+			font-size: 17px;
+			text-align: center;
+			line-height: 44px;
+			background: #D74B28;
+			/*background: -webkit-linear-gradient(top,rgba(215,75,40,1),rgba(215,75,40,0.8));*/
+			z-index: 9999;
+			/*border-bottom: 1px solid rgba(215,75,40,0.8);*/
+			-ms-touch-action: none;
+			box-sizing: content-box;
+		}
+		.mui-content {
+			padding-top: 44px;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="error-tpl">
+			<p>当前网络不可用，请稍后重试</p>
+			<p><button type="button" class="btn-refresh">刷新重试</button></p>
+		</div>
+		<header id="header" class="immersed-header">
+			<div class="nvtt">用户中心</div>
+		</header>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">用户中心</h1>
+		</header>
+		<div class="mui-content" id="content">
+			<ul id="J_header" class="mui-table-view mui-grid-view" style="position:relative;">
+				<li class="mui-table-view-cell mui-col-xs-3 mui-pull-left mui-text-center user-phone">
+					<a href="#"><img id="user-header" src="../../images/user/header_002.png"></a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-text-left user-account">
+					<a id="user-account" href="#">登陆／注册</a>
+				</li>
+			</ul>
+
+			<ul id="tab-pay" class="mui-table-view set-list mui-collapse">
+				<li class="mui-table-view-cell">余额：<span id="balance">0.00</span>
+					<a id="user-balance" class="mui-pull-right" style="position:relative;">
+						<i class="mui-icon mui-icon-spinner mui-spin"></i></a>
+				</li>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-pull-left mui-text-center">
+						<a href="#" target="../pay/beecloud.html" target_id="beecloud-html">
+							<span class="mui-icon-extra mui-icon-extra-card"></span>
+							<span class="mui-media-body">充值</span></a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-6  mui-text-center">
+						<a href="#" target="withdraw/conversion.html" target_id="conversion-html">
+							<span class="mui-icon-extra mui-icon-extra-gold"></span>
+							<span class="mui-media-body">提现</span></a>
+					</li>
+				</ul>
+			</ul>
+
+			<ul id="tab-order" class="mui-table-view set-list mui-collapse" style="margin:10px 0;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#" target="order/ord_list.html" target_id="ord-list-html">我的彩票
+						<span class="mui-pull-right" style="position:relative;right:15px;">全部订单</span></a>
+				</li>
+				<ul class="mui-table-view mui-grid-view">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4">
+						<a href="#" target="order/ord_list.html" target_id="ord-list-html">
+							<span class="mui-icon mui-icon-home"></span>
+							<div class="mui-media-body">已开奖订单</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4">
+						<a href="#" target="order/ord_list.html" target_id="ord-list-html">
+							<span class="mui-icon mui-icon-home"></span>
+							<div class="mui-media-body">中奖订单</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4">
+						<a href="#" target="order/ord_list.html" target_id="ord-list-html">
+							<span class="mui-icon mui-icon-home"></span>
+							<div class="mui-media-body">追号订单</div>
+						</a>
+					</li>
+				</ul>
+			</ul>
+
+			<div id="list-table">
+				<ul class="mui-table-view set-list" style="margin-bottom: 10px;">
+					<li class="mui-table-view-cell" target="security/sec_index.html" target_id="sec-index-html">
+						<i class="mui-icon-extra mui-icon-extra-card"></i>
+						<span class="title-style">个人中心</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="certification/certification.html" target_id="certification-html">
+						<i class="mui-icon mui-icon-contact"></i>
+						<span class="title-style">实名认证</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="bankcard/bankcard.html" target_id="bankcard-html">
+						<i class="mui-icon-extra mui-icon-extra-card"></i>
+						<span class="title-style">绑定银行卡</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="account/act_sum.html" target_id="act-sum-html">
+						<i class="mui-icon-extra mui-icon-extra-prech"></i>
+						<span class="title-style">交易明细</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="account/act_msg.html" target_id="act-msg-html">
+						<i class="mui-icon-extra mui-icon-extra-gold"></i>
+						<span class="title-style">我的消息</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="account/act_favourite.html" target_id="act-favourite-html">
+						<i class="mui-icon-extra mui-icon-extra-gold"></i>
+						<span class="title-style">我的收藏</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+				</ul>
+
+				<ul class="mui-table-view set-list" style="margin-bottom:10px;">
+					<li id="version" class="mui-table-view-cell hide" target="version/version.html" target_id="version-html">
+						<i class="mui-icon mui-icon-upload"></i>
+						<span class="title-style">版本更新</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell">
+						<i class="mui-icon mui-icon-help"></i>
+						<span class="title-style">在线客服</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+				</ul>
+				<ul class="mui-table-view set-list">
+					<li class="mui-table-view-cell" target="setting/setting.html" target_id="setting-html">
+						<i class="mui-icon mui-icon-gear"></i>
+						<span class="title-style">设置</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+					<li class="mui-table-view-cell" target="../push/push_demo.html" target_id="push-demo-html">
+						<i class="mui-icon mui-icon-gear"></i>
+						<span class="title-style">推送测试</span>
+						<span class="mui-navigate-right mui-pull-right"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/immersed.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				$.ready(function() {
+					var balance = doc.getElementById("balance");
+					var plusReady = function(){
+						//计算最大提现数目
+						app.getRealUserInfoByKeys(["balance","identity_card","identity_is_verify"], function(data){
+							if(data){
+								balance.innerText = data.balance;
+							}
+						});
+					}
+					doc.getElementById("user-balance").addEventListener("tap", function() {
+						balance.innerText = '0.00';
+						plusReady();
+					});
+					//监听余额变化
+					window.addEventListener("reLoadBalance", function(event) {
+						plusReady();
+					});
+					doc.addEventListener('plusready', plusReady, false);
+
+					var userLoginStatus = function() {
+						var user = app.getState();
+						if(!isEmptyObject(user)) {
+							var userInfo = JSON.parse(localStorage.getItem('$localUser'));
+							if (userInfo && userInfo.avatar) {
+								doc.getElementById('user-header').setAttribute('src', BDF.AppConfig.apiUrl + '/' + userInfo.avatar);
+							} else {
+								doc.getElementById('user-header').setAttribute('src', '../../images/user/header_002.png');
+							}
+							doc.getElementById('user-account').innerHTML = user.account;
+						} else {
+							doc.getElementById('user-header').setAttribute('src', '../../images/user/header_002.png');
+							doc.getElementById('user-account').innerHTML = '<span class="alink-login">登录／注册</span>';
+						}
+					}
+					userLoginStatus();
+					//监听到点击信封，跳转到消息页面
+					window.addEventListener("CheckLogin", function(event) {
+						userLoginStatus();
+						plusReady();
+					});
+
+					// 头像更改
+					window.addEventListener("avatar.update", function(event) {
+						var avatar = event.detail.avatar;
+						var $avatar = document.getElementById('user-header');
+
+						if (avatar) {
+							$avatar.src = avatar;
+						}
+					});
+
+					//点击头像进入账号安全页面
+					// var $settings = document.getElementById('J_settings')
+					// $settings.addEventListener('tap', function() {
+					// 	openWebview('setting.html', 'setting/setting.html', {
+					// 		extras: {}
+					// 	});
+					// });
+					//监听到点击信封，跳转到消息页面
+					window.addEventListener("info", function(event) {
+						openWebview('info', 'info.html', {
+							extras: {}
+						});
+					});
+
+					$("#J_header").on("tap", "li", function() {
+						var userInfo = app.getState();
+						if(!isEmptyObject(userInfo)) {
+							openWebview('sec-index-html', 'security/sec_index.html');
+						}else{
+							openWebview('login-html', '/main/login/login.html');
+						}
+					});
+
+					if(!mui.os.ios) {
+						BDF.removeClass(doc.getElementById('version'), "hide");
+					}
+
+					//结算相关事件绑定
+					$("#tab-pay").on("tap", "a", function() {
+						var target = this.getAttribute("target");
+						var target_id = this.getAttribute("target_id");
+						if(target && target_id) {
+							openWebview(target_id, target, {
+								extras: {}
+							});
+						}
+					});
+
+					//订单
+					$("#tab-order").on("tap", "a", function() {
+						var target 		= this.getAttribute("target");
+						var target_id 	= this.getAttribute("target_id");
+						if(target && target_id) {
+							openWebview(target_id, target, {
+								extras: {}
+							});
+						}
+					});
+
+					//点击页面列表跳转至对应的页面
+					$("#list-table").on("tap", "li", function() {
+						var target = this.getAttribute("target");
+						var target_id = this.getAttribute("target_id");
+						if(target && target_id) {
+							openWebview(target_id, target, {
+								extras: {}
+							});
+						}
+					});
+				})
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

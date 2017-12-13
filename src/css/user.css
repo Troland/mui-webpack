@@ -1,0 +1,112 @@
+#J_header{background-color:#E44346;height:100px;-webkit-box-shadow:none;padding:0;}
+#J_header li{line-height: 60px;}
+#J_header .user-phone {
+ 	text-align:center;
+}
+#J_header .user-phone img {
+    width: 50px;
+    height: 50px;
+ 	border-radius: 50%;
+ 	padding: 2px;
+    border: 1px solid #eee;
+}
+#J_header li.user-account{
+	line-height: 48px;
+ 	color: #FFFFFF;
+}
+
+#list-table ul:last-child {
+  margin-bottom: 40px;
+}
+ul.mui-table-view li i{
+	font-size: 20px;
+	color: #CC0000;
+	font-weight: 500;
+}
+
+#scan-code{}
+#scan-code .mui-popup .mui-popup-in {height: 70%;}
+#scan-code .mui-popup-inner,.mui-popup-inner .content {height: 100%;}
+#scan-code .mui-popup-backdrop {background-color: rgba(0,0,0,.2);}
+#scan-code .mui-popup-inner .prompt-title {text-align: left;}
+#scan-code span {
+	font-size: 22px;
+	color: #6D6D72;
+}
+#scan-code span.close {
+	font-size: 40px;
+	position: absolute;
+	top: 5px;
+	right: 10px;
+}
+#scan-code .footer-txt {
+    margin-bottom: 0;
+    padding: 20px 0;
+}
+
+#scan-code .code {
+  margin-bottom: 40px;
+  margin-top: 60px;
+}
+#scan-code .code img {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+    color: #f00;
+}
+
+.space-code,.space-user {
+   height: 20px;
+   line-height: 20px;
+}
+[class^="iconfont-"],
+[class*="iconfont-"] {
+    width: 18px;
+    height: 18px;
+}
+
+
+
+ #info {
+	position: relative;
+	padding: 5px 20px 5px 0;
+	color: #333;
+    font-size: 22px;
+	line-height: 36px;
+ }
+ .mui-tab-label {
+ 	font-size: 12px;
+ 	margin-top: -10px;
+ }
+
+ #info .badge-modify {
+ 	position: absolute;
+ 	top: 3px;
+ 	left: 40px;
+ 	background-color: transparent;
+ 	font-size: 14px;
+ 	color: red;
+ }
+ .mui-table-view-cell {
+ 	  padding: 12px 18px;
+ }
+ .title-style {
+	width: 100%;
+	font-family: "MicrosoftYaHei";
+	font-size: 14px;
+	color: #3C3C3C;
+ }
+ .mui-table-view:after {
+    background-color: #ddd !important;
+    left: 15px;
+    right: 15px;
+}
+.mui-table-view-cell:after {
+	right: 15px !important;
+    background-color: #ddd !important;
+}
+.mui-bar-nav.mui-bar .mui-icon {
+	padding-right: 14px;
+	padding-left: 14px;
+	line-height:24px;
+}

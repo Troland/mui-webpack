@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/app.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+	<style rel="stylesheet" type="text/css">
+		.mui-input-row{
+			padding: 5px 10px;
+		}
+		.mui-content-server {
+			margin: 0 auto;
+			width: 90%;
+			bottom: 20px;
+			left: 5%;
+			position: absolute;
+		}
+		.mui-content-server button{
+			padding: 10px;
+			color: #898C8B;
+		}
+	</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title">问题反馈</h1>
+</header>
+<div class="mui-content">
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell"><i class="mui-icon mui-icon-compose"></i>描述</li>
+		<li class="mui-table-view-cell mui-input-row">
+			<textarea style="font-size:14px;color:#898C8B;" id="feedback" rows="5" placeholder="请详细描述问题"></textarea>
+		</li>
+		<li class="mui-table-view-cell mui-text-right" style="font-size:14px;color:#898C8B;">字数500字以内</li>
+	</ul>
+	<div class="mui-content-server mui-text-center">
+		<button class="mui-btn mui-btn-block" id="J_commit">提交</button>
+	</div>
+</div>
+<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script> 
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+	var content = doc.getElementById("feedback");
+	$(".mui-content-server").on("tap", "button", function(){
+		if(!content.value){
+			plus.nativeUI.toast("请填写反馈问题");
+		}else{
+			addFeedBack('用户问题反馈', content.value, function(res){
+				if(res.status == "0"){
+					plus.nativeUI.toast("您的反馈已经收到，我们会及时处理。");
+					content.value = '';
+				}else{
+					plus.nativeUI.toast(res.msg);
+				}
+			})
+		}
+	})
+	
+	
+	var addFeedBack = function(title, content, callback){
+		callback = callback || $.noop;
+		BDF.api('/user/Feedback/addFeedback', {
+			'data':{
+				'msg_title':title,
+				'msg_content':content
+			}}, function (result) {
+				return callback(result);
+			}
+		)
+	}
+})(mui, document)
+</script>
+</body>
+</html>

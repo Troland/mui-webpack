@@ -1,0 +1,60 @@
+div.select-bank{
+	margin-top: 16px;
+}
+div.select-bank ul,div.input-box ul{
+	border: solid #D9D9DA 1px;
+}
+div.select-bank ul > li div{
+	font-size:16px
+}
+.area {
+	margin: 20px auto 0px auto;
+}
+.mui-input-group:first-child {
+	margin-top: 20px;
+}
+.mui-input-group label {
+	width: 35%;
+}
+.mui-input-row label~input,
+.mui-input-row label~select,
+.mui-input-row label~textarea {
+	width: 65%;
+}
+.mui-input-row p{
+	line-height: 22px;
+	font-size:16px;
+	color: #000000;
+	margin-top: 8px;
+}	
+
+.mui-checkbox input[type=checkbox],
+.mui-radio input[type=radio] {
+	top: 6px;
+}
+.mui-content-padded {
+	margin-top: 25px;
+}
+.mui-btn {
+	padding: 10px;
+}
+.mui-content-server {
+	width: 100%;
+	position: absolute;
+	bottom: 20px;
+}
+.mui-content-server p{
+	width: 100%;
+	text-align: center;
+	line-height: 20px;
+	padding: 0;
+	margin: 0;
+	font-size: 12px;		
+}
+.mui-content-server p font{
+	color: cornflowerblue;
+}
+h3.reset-style{
+	font-weight: 300;
+	margin: 30px 0;
+}

@@ -1,0 +1,51 @@
+.draw-detail__bd {
+  padding: 0 15px;
+}
+.draw-detail__hd {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #fff;
+}
+.draw-detail__hd .lottery-bd {
+  margin: 5px 0;
+}
+.lottery-summary {
+  /*display: flex;*/ 
+  display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+.lottery-summary__item {
+  /*flex: 1;*/
+  text-align: center;
+  -webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-moz-box-flex: 1;
+	-moz-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+.lottery-summary__item p {
+  color: #f00;
+  font-size: 20px;
+}
+.lottery-winning-tb {
+  width: 100%;
+  color: #000;
+}
+.lottery-winning-tb td, .lottery-winning-tb th {
+  border: 1px solid #ccc;
+  height: 35px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 19px;
+}
+.lottery-winning-tb th {
+  background-color: #DDD;
+  color: #C0C0C0;
+}
+.lottery-bd {
+  text-align: center;
+}

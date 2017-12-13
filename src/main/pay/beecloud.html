@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>产品结算</title>
+    <link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/pay.css" />
+	<style>
+	</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title">充值</h1>
+</header>
+<div class="mui-content">
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<div class="mui-input-row mui-plus-visible">
+				<label>充值账号：</label>
+				<input style="text-align:right;" readonly="true" type="text" placeholder="" value="18991260785">
+			</div>
+		</li>
+		<li class="mui-table-view-cell">
+			<div class="mui-input-row mui-plus-visible">
+				<label>账户余额：</label>
+				<input style="text-align:right;" readonly="true" type="text" placeholder="" value="0.00元">
+			</div>
+		</li>
+		<li class="mui-table-view-cell">
+			<div class="mui-input-row mui-plus-visible">
+				<label>充值金额：</label>
+				<span class="mui-pull-right" style="margin:9px 18px 0 0;">元</span>
+				<input style="text-align:right;padding:0 5px;width:50%;" type="text" placeholder="充值金额不能低于0.01">
+			</div>
+		</li>
+	</ul>
+
+	<div class="input-box">
+		<ul class="mui-table-view mui-table-view-radio oauth-area">
+			<li class="mui-table-view-cell">支付方式</li>
+		</ul>
+	</div>
+	<p style="text-align:center;padding:10px 0;">系统目前处于邀请测试阶段，付款方式为预付订金</p>
+</div>
+
+<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/beecloud.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+	mui.init({
+		swipeBack:true //启用右滑关闭功能
+	});
+
+	var orderData = {};
+	var self	  = null;
+	var orderPage = null;
+	$.plusReady(function() {
+		self 	  = plus.webview.currentWebview();
+		order_id  = self.order_id;
+		orderPage = plus.webview.getWebviewById("order-html");
+		mui.fire(orderPage, 'RefreshEvent', {'refresh':true});
+	});
+	
+	var initFun = function(){
+		//配置业务支持的支付通道，支付需要服务端支持，在BeeCloud上支持支付宝支付和微信支付；
+		var support_channel = ['alipay', 'wxpay']; 
+		plus.payment.getChannels(function(s) {
+			var oauthArea = document.querySelector('.oauth-area');
+			for (var i = 0; i < s.length; i++) {
+				if(s[i].serviceReady){
+					if(~support_channel.indexOf(s[i].id)){
+						var html   = '';
+						var payDiv = document.createElement('li');
+						payDiv.setAttribute('id', s[i].id);
+						payDiv.className = 'mui-table-view-cell radio-box pay';
+						html = '<a class="mui-navigate-right mui-media">'+
+									'<img class="mui-media-object mui-pull-left" src="../../images/product/'+s[i].id+'.png">'+
+									'<div class="mui-media-body">'+
+										'<font id="bankname">支付宝支付</font>'+
+										'<p id="bankinfo" class="mui-ellipsis">安全快捷，方便快捷</p>'+
+									'</div>'+
+								'</a>';
+						payDiv.innerHTML = html;
+						oauthArea.appendChild(payDiv);
+					}
+				}
+			}
+			channels = s;
+		}, function(e) {
+			console.log("获取支付渠道信权限失败:" + e.message);
+		});		
+	}
+	//获取订单信息初始化页面
+	var plusReady = function(){
+		BDF.api('/order/Order/getOrderInfo', {'data':{'order_id':order_id}}, function (result) {
+			if(result.status == 0){
+				if(!isEmptyObject(result.data)){
+					orderData = result.data;
+					doc.getElementById("order-sum").innerHTML = orderData.order_amount;
+				}else{
+					plus.nativeUI.toast("获取订单信息失败");
+					mui.back();
+				}
+			}else{
+				plus.nativeUI.toast(result.msg);
+			}
+		});
+		initFun();
+	}
+	document.addEventListener('plusready', plusReady, false);
+	
+	mui('ul.mui-table-view-radio').on('tap', 'li.pay', function() {
+		var channel_id = null;
+		switch (this.id) { 
+			case 'alipay':
+				channel_id = 'ALI_APP';
+				break;
+			case 'wxpay':
+				channel_id = 'WX_APP';
+				break;
+			case 'UN_WEB':
+				channel_id = 'UN_WEB';
+				break;
+			default:
+				break;
+		}
+		if(!isEmptyObject(orderData)){
+			if(orderData.admin_ensure == 0 && orderData.pay_status != 2){
+				beecloudPay(channel_id);
+			}else{
+				plus.nativeUI.toast('订单状态异常，无法进行支付。');
+			}
+		}else{
+			//plus.nativeUI.toast('获取订单信息失败，请返回重新提交订单');
+			plus.nativeUI.toast('系统开发中……');
+		}
+	})
+
+	function beecloudPay(bcChannel) {
+		//var _appid 		= bcChannel == "UN_WEB" ? "c37d661d-7e61-49ea-96a5-68c34e83db3b":"44f01a13-965f-4b27-ba9f-da678b47f3f5";
+		var _orderSum 	= parseInt(orderData.surplus_pay*100);
+		var _bill_no	= beecloud.genBillNo();
+		var payData = {
+			app_id: "8f5dff9e-f3a0-4418-8fdf-2359879bafbc",
+			//app_id: _appid,
+			channel: bcChannel,
+			title: "未来语言订单结算",
+			total_fee: _orderSum,
+			bill_no: _bill_no,
+			optional: {
+				'order_id': orderData.order_id,
+				'order_sn': orderData.order_sn,
+				'surplus_pay':orderData.surplus_pay,
+				'order_bill_no': _bill_no
+			},
+			bill_timeout: 360,
+			return_url: "http://fuopen.bestfu.co/order/PayNotify/clientNotify"
+		};
+
+		beecloud.payReq(payData, function(result) {
+			console.info(JSON.stringify(result));
+			var orderPage = plus.webview.getWebviewById("order-html");
+			plus.nativeUI.alert('感谢您对我们产品的支持。',function(){
+				BDF.api('/order/PayNotify/clientNotify',
+					{'data':{
+						'order_id':orderData.order_id,
+						'order_sn':orderData.order_sn,
+						'surplus_pay':orderData.surplus_pay,
+						'order_bill_no':_bill_no
+						}
+					}, function (result) {
+						return
+					}
+				);
+				mui.fire(orderPage, 'RefreshEvent');
+				mui.back();
+			}, '支付成功');
+		}, function(e) {
+			console.info(JSON.stringify(e));
+			plus.nativeUI.alert('您的订单付款失败，请确认订单信息是否正确或者联系客服人员进行处理……', null, '支付失败：'+e.code);
+		});
+	}
+})(mui, document);
+</script>
+</body>
+</html>

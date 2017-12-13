@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>提现</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/select-bank.css" />
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+        <h1 class="mui-title">选择银行卡</h1>
+    </header>
+	<div class="mui-content"></div>
+	<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="UTF-8">
+		(function($, doc){
+			//启用双击监听
+			mui.init({
+				gestureConfig:{
+					doubletap:true
+				},
+				subpages:[{
+					url:'selectbank_sub.html',
+					id:'selectbank-sub-html',
+					styles:{
+						top: '44px',
+						bottom: '0px',
+					}
+				}]
+			});
+			
+			var contentWebview = null;
+			document.querySelector('header').addEventListener('doubletap',function () {
+				if(contentWebview==null){
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+			});
+		})(mui, document)
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+.profile__hd {
+  display: flex;
+  padding: 15px;
+  background-color: #F0F0F0;
+}
+.profile-info {
+  flex: 1;
+}
+.avatar {
+  width: 80px;
+  margin-right: 10px;
+}
+.avatar img {
+  width: 100%;
+}
+.profile-info__username {
+  margin-bottom: 5px;
+}
+.profile-info__extras span {
+  margin-right: 15px;
+}
+.tip {
+  text-align: center;
+}
+.profile-info__username {
+  font-weight: normal;
+}
+.profile-info__username em {
+  margin-left: 10px;
+  font-style: normal;
+  color: #CCCCCC;
+}

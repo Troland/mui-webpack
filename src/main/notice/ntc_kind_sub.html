@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>彩票列表</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/notice/index.css" />
+		<style type="text/css">
+			.publish-results {
+				background-color: #fff!important;
+				font-size: 12px;
+				background: #007AFF;
+			}
+			.publish-results li{
+				padding: 8px 15px;
+				border-bottom: 1px solid #eee;
+			}
+			.publish-results div p {
+				font-size: 10px;
+				margin: 0;
+				color: #929292;
+			}
+			.publish-results p.info-content{
+				font-size: 14px;
+			}
+			.publish-results p.result{
+				padding: 8px 0 4px 0;
+			}
+			.publish-results p.result span{
+				color: #666666;
+				font-size: 16px;
+				line-height: 1;
+				display: inline-block;
+				padding: 7px 7px;
+			}
+			.publish-results li:first-child p.result span{
+				position: relative;
+				top: -1px;
+				width: 30px;
+				height: 30px;
+				text-align: center;
+				font-size: 14px;
+				border-radius: 50%;
+				color: #fff;
+				background: #FF0000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+		    <h1 class="mui-title">重庆时时彩</h1>
+		</header>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="list-table">
+					<ul id="list-data" class="publish-results mui-table-view"></ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/template" id="vdd-one-tpl">
+			{{each list item i}}
+			<li class="mui-table-view-cell">
+				<a>
+					<div class="mui-media-body mui-ellipsis">
+						<p class="info-content">{{ item.subTitle }} {{ item.open_time }}</p>
+						<p class="result">
+							{{each item.open_result number i}}
+							<span>{{ number }}</span>
+							{{/each}}
+						</p>
+					</div>
+				</a>
+			</li>
+			{{/each}}
+		</script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				$.ready(function() {
+					mui.init({
+						swipeBack: true, //启用右滑关闭功能
+						pullRefresh: {
+							container: '#pullrefresh',
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+					});
+		
+					var $view = document.body.querySelector('.publish-results');
+					var historyList = [];
+					var nowPage = 1;
+					var plusready = function() {
+						ajaxDataInfo(nowPage, 10, function(result) {
+							uploadListBox(result, function(e) {
+								if(!e) {
+									nowPage--;
+									plus.nativeUI.toast("没有更多数据了");
+								}
+							});
+						});
+						nowPage++;
+					}
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						setTimeout(function() {
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+							ajaxDataInfo(nowPage, 10, function(result) {
+								uploadListBox(result, function(e) {
+									if(!e) {
+										nowPage--;
+										plus.nativeUI.toast("没有更多数据了");
+									}
+								});
+							});
+							nowPage++;
+						}, 1500);
+					}
+		
+					var uploadListBox = function(res, callback) {
+						var items = res.data.items, html = '';
+						var lotterTplType;
+						items.forEach(function(item) {
+							// 判断彩票模板
+							switch (item.lott_id){
+								case 1:
+									lotterTplType = 'vdd-one-tpl';
+									item.open_result = item.open_code.split(',');
+									break;
+								case 3:
+									lotterTplType = 'vdd-one-tpl';
+									item.open_result = item.open_code.split(',');
+									break;
+								default:
+									lotterTplType = 'vdd-one-tpl';
+									item.open_result = item.open_code.split(',');
+							}
+							item.subTitle  = '第' + item.expect + '期 ';
+						})
+						html += template(lotterTplType, {list: items});
+						$view.innerHTML = html;
+					}
+
+					var ajaxDataInfo = function(page, list_num, callback) {
+						BDF.api('/iletou/result/getHistory', {
+								'data': {
+									crossDomain: true
+								}
+							},
+							function(result) {
+								if(!isEmptyObject(result)) {
+									if(result.status == '0') {
+										return callback(result);
+									} else {
+										$.toast(result.msg);
+									}
+								} else {
+									$.toast("网络错误，请联系管理员");
+								}
+							}
+						)
+					}
+					document.addEventListener('plusready', plusready, false);
+				});
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

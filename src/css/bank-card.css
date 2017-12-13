@@ -1,0 +1,28 @@
+#bank-card{
+	background-color: #E44346;
+}
+#bank-card i{
+	margin-top: 7px;
+}
+.mui-card{
+	padding: 0;
+	margin: 0;			
+}
+.mui-card div.mui-card-content{
+	font-size: 18px;
+}
+.mui-card div.mui-card-content img{
+	position: relative;
+	top:10px;
+	left: 15px;
+	width: 30px;
+	height: 30px;
+}
+button.mui-btn{
+	margin: 60px auto;
+	padding: 10px;
+	line-height: 20px;
+}
+.mui-slider-right{
+	padding: 10px 0;
+}

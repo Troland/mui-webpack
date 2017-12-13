@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>提现</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/conversion.css" />
+</head>
+<body>
+<div class="error-tpl">
+	<p>当前网络不可用，请稍后重试</p>  
+	<p><button type="button" class="btn-refresh">刷新重试</button></p>
+</div>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title">提现</h1>
+    <a id="withdraw-data-record" class="mui-pull-right">提现记录</a>
+</header>
+<div class="mui-content">
+	<div class="select-bank">
+		<ul class="mui-table-view mui-table-view-chevron">
+			<li id="user-bank-id" class="mui-table-view-cell mui-media">
+				<a id="select-bank-link" class="mui-navigate-right">
+					请选择银行卡
+				</a>
+			</li>
+		</ul>
+		<input id="bank_id" type="hidden">
+	</div>
+	
+	<div class="input-box">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">提现金额</li>
+			<li id="sum" class="mui-table-view-cell mui-input-row">
+				<label>￥</label>
+				<input id="amount" type="number" class="mui-input-clear" data-input-clear="5"></li>
+			<li class="mui-table-view-cell">本次可提现最大金额为<font id="max-bonus"></font>元</li>
+		</ul>
+	</div>
+	<p style="text-align:left;padding:10px 15px;">备注：每笔提现手续费为5元，到账时间T+3</p>
+	<div class="button-box">
+		<button type="button" class="mui-btn mui-btn-primary mui-btn-block">确认提现，T+3到账</button>
+	</div>
+</div>
+<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc){
+	mui.init({
+		swipeBack:true //启用右滑关闭功能
+	});
+	var amountObj   = doc.getElementById("amount");
+	var bankIdObj   = doc.getElementById("bank_id");
+	var maxBonusObj = doc.getElementById("max-bonus");
+	var userInfoObj = {};
+	var maxBonus	= 0;
+	var user_bonus  = 0;
+	
+	var plusReady = function(){
+		//计算最大提现数目
+		app.getRealUserInfoByKeys(["balance","identity_card","identity_is_verify"], function(data){
+			if(data){
+				if(data.identity_card == 0 || data.identity_card == ''){
+					mui.alert('提现操作需要提前绑定银行卡', '温馨提示', function() {
+						openWebview('bankcard-html', '../bankcard/bankcard.html');
+					});
+					return false;
+				}
+				//红包余额
+				var balance = parseInt(data.balance);
+				if(balance > 0){
+					maxBonus = parseInt(balance/100)*100;
+				}
+				maxBonusObj.innerText = maxBonus;
+			}
+		});
+	}
+	doc.addEventListener('plusready', plusReady, false);
+
+	//绑定兑换、提现操作
+	doc.getElementById("withdraw-data-record").addEventListener("tap", function() {
+		//打开关于页面
+		mui.openWindow({
+			url: "withdraw.html",
+			id: "withdraw-html",
+		});
+	});
+
+	//添加bank-selected自定义事件监听
+	window.addEventListener('bankSelected', function(event){
+		//获得事件参数
+		var selected = doc.getElementById("select-bank-link");
+		var bankId   = event.detail.bank_id;
+		var html 	 = '';
+		ajaxDataInfo(bankId, function(result){
+			if(isEmptyObject(result)) {
+				plus.nativeUI.toast("网络错误，请联系管理员");
+				return false;
+			}
+			if(result.status == "0"){
+				if(!isEmptyObject(result.data)){
+					selected.innerHTML = "";
+					html =  '<img id="banklogo" class="mui-media-object mui-pull-left" src="'+result.data.bank_icon+'">'+
+							'<div class="mui-media-body">'+
+								'<font id="bankname">'+result.data.bank_name+'</font>'+
+								'<p id="bankinfo" class="mui-ellipsis">'+result.data.card_no+'</p>'+
+							'</div>';
+					selected.innerHTML 	= html;
+					bankIdObj.value 	= result.data.card_true_no;
+				}else{
+					plus.nativeUI.toast("提现银行卡信息获取失败！");
+				}
+			}else{
+				plus.nativeUI.toast(result.msg);
+			}
+		})
+	});
+	
+	//异步获取数据
+	var ajaxDataInfo = function(bankId, callback){
+		BDF.api('/user/BankCard/getBankcard', {'data': {"bank_card_id": bankId}},
+			function (result) {
+	        		if(!isEmptyObject(result)){
+	        			if(result.status == '0'){
+	        				return callback(result);
+	        			}else{
+	        				plus.nativeUI.toast(result.msg);
+	        			}
+	        		}else{
+	        			plus.nativeUI.toast("网络错误，请联系管理员");
+	        		}
+        		}
+		)
+	}
+	//绑定兑换、提现操作
+	doc.getElementById("select-bank-link").addEventListener("tap", function() {
+		//打开关于页面
+		mui.openWindow({
+			url: "selectbank.html",
+			id: "selectbank-html",
+		});
+	});
+	
+	//提现操作
+	var drawCacheActive = function(param, callback){
+		callback = callback || $.noop;
+		BDF.api('/user/Balance/drawCash', {
+			'data':{
+				'from_account':param.bank_card_id,
+				'order_value':param.bonus,
+				'from':'银行卡',
+				'order_sn':''}
+			}, function (result) {
+				return callback(result);
+			}
+		)
+	}
+	
+	//提现
+	$("div.button-box").on("tap", "button", function(){
+		var realAmount = 0;
+		var params = {
+			bank_id: bankIdObj.value,
+			amount : amountObj.value
+		}
+		if(params.amount == ''){
+			plus.nativeUI.toast("请选择提现银行卡");
+			return false;
+		}
+		if(params.amount <= 0){
+			plus.nativeUI.toast("请填写正确的提现金额");
+			return false;
+		}
+		if(params.amount > maxBonus){
+			plus.nativeUI.toast("提现金额不能大于最大提现限额");
+			return false;
+		}
+		if(params.amount > maxBonus){
+			plus.nativeUI.toast("提现金额不能大于最大提现限额");
+			return false;
+		}
+		realAmount = parseInt(params.amount/100)*100;
+		if(realAmount == 0 || realAmount != params.amount){
+			plus.nativeUI.toast("提现金额必须是100的整数倍");
+			return false;
+		}
+
+		//确认操作
+		var btnArray = ['取消', '确认'];
+		$.confirm("点击“确认”后，我们将提交信息进行验证，请关注页面提示……", "确认信息", btnArray, function(e) {
+			if (e.index == 1) {
+				drawCacheActive({
+					'bonus': params.amount,
+					'bank_card_id':params.bank_id
+				}, function(result){
+					if(result.status == 0){
+						var parent = plus.webview.getWebviewById("user-html");
+						mui.fire(parent, 'reLoadBalance', {});
+						plus.nativeUI.toast("恭喜您，提现已经完成，请注意查收");
+						$.back();
+					}else{
+						plus.nativeUI.toast(result.msg);
+						return false;
+					}
+				})
+			}else{
+				return false;
+			}
+		})
+	})
+})(mui, document)
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/app.css"/>
+<link rel="stylesheet" type="text/css" href="../../../css/certification.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/mui.picker.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/mui.poppicker.css" />
+</head>
+<body>
+<div class="error-tpl">
+	<p>当前网络不可用，请稍后重试</p>  
+	<p><button type="button" class="btn-refresh">刷新重试</button></p>
+</div>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title"></h1>
+</header>
+<div class="mui-content">
+	<h3 class="mui-h3 reset-style mui-text-center">确认卡号并提交</h3>
+	<form class="mui-input-group">
+		<div id='show_picker' class="mui-input-row" >
+			<label>银行卡类型</label>
+			<p id="bank_card_type"></p>
+			<input id="card_type" type="hidden" value="" >
+			<input id="bank_type" type="hidden" value="" >
+			<input id="card_num" type="hidden" value="" >
+			<input id="real_name" type="hidden" value="" >
+			<input id="identity" type="hidden" value="" >
+		</div>
+		<div class="mui-input-row">
+			<label>预留手机号</label>
+			<input id="bank_phone" type="number" class="mui-input-clear mui-input" placeholder="请输入预留手机号码">
+		</div>
+	</form>
+	<div class="mui-content-padded">
+		<button id='submit' type="button" class="mui-btn mui-btn-block mui-btn-primary">认证</button>
+	</div>
+	<div class="mui-content-server mui-text-center">
+		<p>轻触上面的“认证”按钮，即表示您同意认证</p>
+		<p><font>《***软件许可以及服务协议》</font>和<font>《***隐私政策》</font></p>
+	</div>
+</div>
+<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/bank_data.js" type="text/javascript" charset="utf-8"></script>
+<script>
+(function($, doc) {
+	mui.init({
+		swipeBack:true //启用右滑关闭功能
+	});
+	var self 		 = {};
+	var submitObj 	 = doc.getElementById('submit');
+	var cardTypeObj  = doc.getElementById('card_type');
+	var bankTypeObj  = doc.getElementById('bank_type');
+	var bankPhoneObj = doc.getElementById('bank_phone');
+	var userInfoObj	 = {};
+	var plusReady = function(){
+		self = plus.webview.currentWebview();
+		app.getRealUserInfoByKeys(['identity_is_verify','identity_card','real_name'], function(data){
+			if(!isEmptyObject(data)){
+				userInfoObj.identity_is_verify 	= data.identity_is_verify;
+				userInfoObj.identity_card 		= data.identity_card;
+				userInfoObj.real_name 			= data.real_name;
+			}
+		});
+	}
+	document.addEventListener('plusready', plusReady, false);
+	//银行卡类型选择控件
+	var _getParam = function(obj, param) {return obj[param] || '';}
+	var bankTypePicker = new $.PopPicker({layer:2});
+	var showPickerButton = doc.getElementById('show_picker');
+	var result = doc.getElementById('bank_card_type');
+	bankTypePicker.setData(bankData);
+	showPickerButton.addEventListener('tap', function(event) {
+		bankTypePicker.show(function(items) {
+			result.innerText   = _getParam(items[0], 'text') + " " + _getParam(items[1], 'text');
+			cardTypeObj.value  = _getParam(items[0], 'text');
+			bankTypeObj.value  = _getParam(items[1], 'text');
+			//返回 false 可以阻止选择框的关闭
+			//return false;
+		})
+	}, false)
+	
+	//验证银行卡有效性
+	var checkBankCard = function(params, callback){
+		callback = callback || $.noop;
+		BDF.api('/user/Verify/bankCardCertification', {
+			'data':{
+				'bankcard':params.bank_card,
+				'realname':params.real_name,
+				'idcard':params.identity,
+				'mobile':params.bank_phone}
+			},function (result) {
+				return callback(result);
+			}
+		)
+	}
+	
+	//添加银行卡到数据库
+	var addBankCard = function(params, callback){
+		callback = callback || $.noop;
+		BDF.api('/user/Verify/bankCardCertification', {
+			'data':{
+				'card_no':params.bank_card,
+				'cardholder':params.real_name,
+				'bank_name':params.bank_type,
+				'bind_mobile':params.bank_phone
+			}}, function (result) {
+				return callback(result);
+			}
+		)
+	}
+	
+	//提交操作
+	submitObj.addEventListener('tap', function(event) {
+		var params = {
+			bank_card : self.card_num,
+			real_name : self.real_name,
+			card_type : cardTypeObj.value,
+			bank_type : bankTypeObj.value,
+			identity  : userInfoObj.identity_card,
+			bank_phone: bankPhoneObj.value
+		}
+		if( !(params.card_type || params.bank_type) ){
+			plus.nativeUI.toast("请选择银行卡类型");
+			return false;
+		}
+		if(!params.bank_phone){
+			plus.nativeUI.toast("请输入预留手机号码");
+			return false;
+		}
+		//发送手机验证码
+		var btnArray = ['取消', '确认'];
+		$.confirm("点击“确认”后，我们将提交信息进行验证，请关注页面提示……", "确认信息", btnArray, function(e) {
+			if (e.index == 1) {
+				//验证银行卡有效性
+				checkBankCard(params, function(result){
+					console.info(JSON.stringify(result));
+					if(result.status != 0){
+						plus.nativeUI.toast(result.msg);
+						return false;
+					}else{
+						plus.nativeUI.toast("添加银行卡完成");
+						openWebview('bankcard-html', 'bankcard.html', {extras:{'status':true}});
+					}
+				});
+			}
+		})
+	})
+})(mui, document)
+</script>
+</body>
+</html>

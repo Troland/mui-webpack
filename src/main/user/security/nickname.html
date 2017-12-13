@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.action-row {
+				padding: 15px;
+			}
+			.action-row .mui-btn {
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">修改昵称</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">
+			    <div class="mui-input-row">
+			        <label>昵称</label>
+			        <input type="text" class="mui-input-clear" id="J_nickname" placeholder="昵称">
+			    </div>
+			</form>
+			<div class="action-row"><button type="button" class="mui-btn mui-btn-blue" id="J_submit">确定</button></div>
+		</div>
+		<script src="../../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			;(function($, doc) {
+				var $submitBtn = document.getElementById('J_submit');
+				var userInfo = JSON.parse(localStorage.getItem('$localUser'));
+				$.init();
+				$submitBtn.addEventListener('tap', function () {
+					var $nickNameInput = document.getElementById('J_nickname'),
+						nickName = $nickNameInput.value;
+
+					console.log('Nickname:', nickName)
+
+					// http://local-api-server.vdd.com/iletou/result/getNewestList
+					$.post('http://47.52.228.84:8081/user/user/updateUserInfo', {
+						crossDomain: true,
+						token: userInfo.token,
+						user_name: nickName,
+						sex: userInfo.sex,
+						avatar: userInfo.avatar,
+						education_background: userInfo.education_background
+					}, function (res) {
+						if(res.status === '0') {
+							$.toast('昵称修改成功')
+							$.back();
+						} else {
+							$.toast(res.msg);
+						}
+					}, 'json');
+				}, false)
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

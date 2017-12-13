@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">个人中心</h1>
+		</header>
+		<div class="mui-content" id="J_profile">
+			<ul class="mui-table-view">
+		    <li class="mui-table-view-cell">
+		    		<a class="mui-navigate-right" onclick="openActionSheet()">头像<img src="" alt="" /></a>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    	 用户名<span></span>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    		<a class="mui-navigate-right" data-link="nickname.html">	昵称<span></span></a>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    		<a class="mui-navigate-right" data-link="modifypassword.html">登录密码修改</a>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    		手机号<span id="J_mobile"></span>
+		    </li>
+		    <li class="mui-table-view-cell">
+		    		<a class="mui-navigate-right" data-link="security-settings.html">安全设置去绑定</a>
+		    </li>
+			</ul>
+		</div>
+		<div id="J_cameraSheet" class="mui-popover mui-popover-bottom mui-popover-action">
+	    <!-- 可选择菜单 -->
+	    <ul class="mui-table-view">
+	      <li class="mui-table-view-cell">
+	        <a href="javascript:void(0)" id="J_camera">打开照相机</a>
+	      </li>
+	      <li class="mui-table-view-cell">
+	        <a href="javascript:void(0)" id="J_photoAlbum">从相册获取</a>
+	      </li>
+	    </ul>
+	    <!-- 取消菜单 -->
+	    <ul class="mui-table-view">
+	      <li class="mui-table-view-cell">
+	        <a href="#J_cameraSheet"><b>取消</b></a>
+	      </li>
+	    </ul>
+		</div>
+		<script src="../../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			var cmr;
+			function openActionSheet() {
+				mui('#J_cameraSheet').popover('toggle');
+			}
+			
+			//压缩图片
+			function compressImage(options) {
+				var parts = options.imgName.split('.'),
+					timeStamp = +new Date(),
+					dstPath = '_doc/' + options.imgName;
+					
+				options.imgName = parts[0] + timeStamp + '.' + parts[1];
+				dstPath = '_doc/' + options.imgName;
+
+			  plus.zip.compressImage({
+			    src: options.src,
+			    dst: dstPath,
+			    width: '100px',
+			    height: '100px',
+			    quality: 20
+			  }, function () {
+			  		createUpload({
+							imagePath: dstPath
+					});
+			  }, function (error) {
+			    mui.toast("Compress error!");
+			  });
+			}
+			
+			// 上传文件
+			function createUpload(options) {
+				var token = JSON.parse(localStorage.getItem('$state')).token
+				var task = plus.uploader.createUpload("http://192.168.0.78/user/User/uploadAvatar", 
+						{
+							method:"POST",
+							blocksize:204800,
+							priority:100
+						},
+					function ( t, status ) {
+						// 上传完成
+						if ( status == 200 ) {
+							mui.toast('头像上传成功')
+						} else {
+							mui.toast('头像上传成功')
+							alert( "Upload failed: " + status );
+						}
+					}
+				);
+				
+				task.addFile(options.imagePath, {key: "image"});
+				task.addData("token", '0b9a20ae2e97d7b59d2725b456806f37');
+				task.start();
+			}
+			
+			// 从相册中选择图片 
+			function openPhotoalbum() {
+				// 从相册中选择图片
+				console.log("从相册中选择图片:");
+			    plus.gallery.pick( function(path){
+			    		var imgName = path.slice(path.lastIndexOf('/') + 1)
+			    		compressImage({
+			    			src: path,
+			    			imgName: imgName
+			    		})
+				    	console.log(path);
+			    }, function ( e ) {
+			    	  console.log( "取消选择图片" );
+			    }, {filter:"image"} );
+			}
+			
+			function openCamera() {
+				console.log('调用摄像头')
+				cmr = plus.camera.getCamera();
+				var res = cmr.supportedImageResolutions[0];
+				var fmt = cmr.supportedImageFormats[0];
+				
+				cmr.captureImage(function( path ) {
+					var imgName = path.slice(path.lastIndexOf('/') + 1)
+		    		compressImage({
+		    			src: path,
+		    			imgName: imgName
+		    		})
+		    		},
+					function( error ) {
+						alert( "Capture image failed: " + error.message );
+					},
+					{resolution:res,format:fmt}
+				);
+			}
+			;(function($, doc) {
+				$.init();
+				var $cameraBtn = document.getElementById('J_camera');
+				var $photoBtn = document.getElementById('J_photoAlbum');
+				
+				$cameraBtn.addEventListener('tap', function () {
+					openCamera();
+				}, false)
+				$photoBtn.addEventListener('tap', function () {
+					openPhotoalbum();
+				}, false);
+				$('#J_profile').on('tap', 'a[data-link]', function () {
+					var link = this.getAttribute('data-link'),
+						viewId = link + 'html';
+						
+					var newWV = plus.webview.create(link, viewId);
+					newWV.show('slide-in-right', 200);
+				}, false);
+//				$('#J_cameraSheet').popover('toggle');
+				$.plusReady(function () {
+//					var cmr = plus.camera.getCamera();
+				})
+			})(mui, document)
+		</script>
+	</body>
+
+</html>

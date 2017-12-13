@@ -1,0 +1,473 @@
+ruleTplMap = [
+  {
+    subRules: [
+      '定位胆-定位胆',
+      '五星-五星通选',
+      '五星-五星直选',
+      '任选二-直选复式',
+      '任选二-直选复式',
+      '任选三-直选复式',
+      '任选四-直选复式',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "万位",
+          value: "tenthousandDigit"
+        },
+        {
+          name: "千位",
+          value: "thousandDigit"
+        },
+        {
+          name: "百位",
+          value: "hundredDigit"
+        },
+        {
+          name: "十位",
+          value: "tenDigit"
+        },
+        {
+          name: "个位",
+          value: "oneDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      minNumber: 0,
+      maxNumber: 10
+    },
+    validator: ''
+  },
+  {
+    subRules: ['三星-三星直选'],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "百位",
+          value: "hundredDigit"
+        },
+        {
+          name: "十位",
+          value: "tenDigit"
+        },
+        {
+          name: "个位",
+          value: "oneDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      minNumber: 0,
+      maxNumber: 10
+    },
+    validator: ''
+  },
+  {
+    subRules: ['三星-三星组三', '三星-三星组六', '二星-二星组选', '任选三-组六复式', '任选三-组三复式'],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "选号",
+          value: "oneDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      minNumber: 0,
+      maxNumber: 10
+    },
+    validator: ''
+  },
+  {
+    subRules: ['二星-二星直选'],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "十位",
+          value: "tenDigit"
+        },
+        {
+          name: "个位",
+          value: "oneDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      minNumber: 0,
+      maxNumber: 10
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-后二大小单双', '大小单双-前二大小单双'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "十位",
+          value: "tenDigit"
+        },
+        {
+          name: "个位",
+          value: "oneDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-后三大小单双', '大小单双-前三大小单双'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "万位",
+          value: "tenDigit"
+        },
+        {
+          name: "千位",
+          value: "tenDigit"
+        },
+        {
+          name: "百位",
+          value: "oneDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-万位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "万位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-千位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "千位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-百位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "百位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-百位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "百位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-个位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "个位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: ['大小单双-个位'],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "个位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双']
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '不定位-前三一码',
+      '不定位-前三二码',
+      '不定位-后三一码',
+      '不定位-后三二码',
+      '不定位-前四一码',
+      '不定位-前四二码',
+      '不定位-后四一码',
+      '不定位-后四二码',
+      '不定位-五星一码',
+      '不定位-五星二码',
+      '不定位-五星三码',
+    ],
+    tpl: 'dxds-tpl',
+    content: {
+      digits: [
+        {
+          name: "不定位",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选二-直选和值',
+      '任选二-组选和值',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "和值",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选二-组选复式'
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "组选",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选三-直选和值',
+      '任选三-组选和值',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "和值",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+      19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29
+      ],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选四-组选24',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "组选24",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选四-组选12',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "二重号",
+          value: "tenDigit"
+        },
+        {
+          name: "单号",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选四-组选6',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "二重号",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '任选四-组选4',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "三重号",
+          value: "tenDigit"
+        },
+        {
+          name: "单号",
+          value: "tenDigit"
+        }
+      ],
+      numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '龙虎-总和',
+    ],
+    tpl: 'positioningbile-tpl',
+    content: {
+      digits: [
+        {
+          name: "总和",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双'],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '龙虎-总和', '龙虎-万千', '龙虎-万百', '龙虎-万十', '龙虎-万个', '龙虎-千百', '龙虎-千十',
+      '龙虎-千个', '龙虎-百十', '龙虎-百个', '龙虎-十个'
+    ],
+    tpl: 'longhu-tpl',
+    content: {
+      digits: [
+        {
+          name: "龙虎",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['大', '小', '单', '双'],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '顺子-前三球'
+    ],
+    tpl: 'longhu-tpl',
+    content: {
+      digits: [
+        {
+          name: "前三",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '顺子-中三球'
+    ],
+    tpl: 'longhu-tpl',
+    content: {
+      digits: [
+        {
+          name: "中三",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '顺子-后三球'
+    ],
+    tpl: 'longhu-tpl',
+    content: {
+      digits: [
+        {
+          name: "后三",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['豹子', '对子', '顺子', '半顺', '杂六'],
+    },
+    validator: ''
+  },
+  {
+    subRules: [
+      '斗牛-斗牛'
+    ],
+    tpl: 'longhu-tpl',
+    content: {
+      digits: [
+        {
+          name: "斗牛",
+          value: "tenDigit"
+        }
+      ],
+      numbers: ['牛牛', '牛九', '牛八', '牛七', '牛六', '牛五', '牛四', '牛三', '牛二', '牛一', '无牛']
+    },
+    validator: ''
+  }
+];

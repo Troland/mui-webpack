@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>版本更新</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+		<style>
+			.mui-page-content ul li:after {
+				right: 15px;
+			}
+			
+			.mui-media-body,
+			#new {
+				float: right;
+			}
+			
+			.mui-media-body {
+				padding-top: 14px;
+				color: #A7AAB1;
+			}
+			
+			.mui-media img {
+				border-radius: 50%;
+			}
+			
+			#version-update {
+				color: #3C3C3C;
+				padding: 15px;
+			}
+			
+			#soft-intro {
+				padding: 15px;
+			}
+			
+			#new {
+				color: #A7AAB1;
+			}
+			
+			.content {
+				color: #737373;
+				line-height: 25px;
+				text-indent: 2em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+			<h1 class="mui-title">版本更新</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-page-content">
+				<ul class="mui-table-view">
+					<li id="soft-intro" class="mui-table-view-cell mui-media">
+						<img class="mui-media-object mui-pull-left" src="../../images/logo/logo.png">
+						<div class="mui-media-body">
+							当前版本<span id="now"></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell content font-size-14">
+						一般情况下软件系统在经过一段时间的使用，就会逐步显现出自身的一些漏洞和缺陷，这些漏洞和缺陷无法满足日益发展软件事业要求，因此软件开发商必须定期或者不定期对软件本身的漏洞和缺陷进行修复和更正，这样就产生了新的软件版本，以满足使用新的要求。
+					</li>
+					<li id="version-update" class="mui-table-view-cell">
+						下载并更新
+						<span id="new" class='mui-ellipsis font-size-14'><span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../js/version.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	    mui.init();
+	    //初始化单页的区域滚动
+	    mui('.mui-scroll-wrapper').scroll();
+	    mui.plusReady(function() {
+		    	//获取系统当前版本
+		    	version.checkUrl = 'http://47.52.228.84:8082/version/Index/getVersionInfo?product=vdd';
+		    	document.addEventListener('plusready', getAppVersion(document.getElementById("now"),document.getElementById("new")), false);
+		    	document.getElementById("version-update").addEventListener("tap", updateApp);
+	    });
+	</script>
+</body>
+</html>

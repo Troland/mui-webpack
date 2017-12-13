@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>玩法说明</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/ui.css">
+		<link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css">
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<link rel="stylesheet" type="text/css" href="../../css/app.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common.css">
+		<link rel="stylesheet" href="../../css/prd_rules.css">
+		<style type="text/css">
+			.mui-content>.mui-table-view:first-child {
+				margin-top: -1px;
+			}
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+      td, th {
+        padding: 5px 10px;
+        border: 1px solid #DDD;
+      }
+      .rules {
+        padding: 10px;
+        background-color: #fff;
+      }
+      .rules p:first-child {
+        padding-top: 10px;
+      }
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+			<h1 class="mui-title" id="J_title">重庆时时彩</h1>
+		</header>
+		<!--下拉刷新容器-->
+		<div id="rules" class="mui-content rules"></div>
+		<script type="text/template" id="rule-tpl">
+			<p><span style="font-size: 14px;"><strong>{{lott_name}}</strong></span></p>
+			<p><span style="font-size: 14px;">开奖时间 : {{rules_time_desc}}<br/></span></p>
+			<p><span style="font-size: 14px;">玩法规则 : {{rules_summary}}</span></p>
+			<table>
+				{{@rules_detail}}
+			</table>
+		</script>
+		<script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			;(function($, doc) {
+				$.init();
+        // $('#rules').html();
+				$.plusReady(function() {
+					var webview = plus.webview.currentWebview(),
+						$rule = document.getElementById('rules'),
+						lotteryType;
+
+          // $('#rules').innerHTML =
+					lotteryType = webview.lotteryType;
+					switch(lotteryType) {
+						case '1':
+							lotteryTypeText = '重庆时时彩';
+							break;
+						case '3':
+							lotteryTypeText = '大乐透';
+							break;
+					}
+					BDF.api('/vdd/Rules/getRulesByLott', {
+	          'type': 'POST',
+	          'data': {
+	            lott_id: '1'
+	          }
+	        }, function(res) {
+	          if (res.status === '0') {
+	            var rule = res.data;
+							$rule.innerHTML = template('rule-tpl', rule);
+	          } else {
+	            $.toast(res.msg);
+	          }
+	        });
+          // 根据不同彩种输出不同玩法说明
+				});
+
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

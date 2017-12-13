@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>交易明细</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+	<style>
+        html,body,.mui-content{
+            width: 100%;
+            height: 100%;
+            background-color: white;
+        }
+		.mui-control-content{
+		    position: absolute;
+		    top: 100px;
+		    bottom: 0px;
+		    left: 0px;
+		    right: 0px;
+		}
+		.mui-pull-top-tips {
+			position: absolute;
+			top: -20px;
+			left: 50%;
+			margin-left: -25px;
+			width: 40px;
+			height: 40px;
+			border-radius: 100%;
+			z-index: 999;
+		}
+		.mui-bar~.mui-pull-top-tips {
+			top: 24px;
+		}
+		.mui-pull-top-wrapper {
+			width: 42px;
+			height: 42px;
+			display: block;
+			text-align: center;
+			background-color: #efeff4;
+			border: 1px solid #ddd;
+			border-radius: 25px;
+			background-clip: padding-box;
+			box-shadow: 0 4px 10px #bbb;
+			overflow: hidden;
+		}
+		.mui-pull-top-tips.mui-transitioning {
+			-webkit-transition-duration: 200ms;
+			transition-duration: 200ms;
+		}
+		.mui-pull-top-tips .mui-pull-loading {
+			/*-webkit-backface-visibility: hidden;
+			-webkit-transition-duration: 400ms;
+			transition-duration: 400ms;*/
+			margin: 0;
+		}
+		.mui-pull-top-wrapper .mui-icon,
+		.mui-pull-top-wrapper .mui-spinner {
+			margin-top: 7px;
+		}
+		.mui-pull-top-wrapper .mui-icon.mui-reverse {
+			/*-webkit-transform: rotate(180deg) translateZ(0);*/
+		}
+		.mui-pull-bottom-tips {
+			text-align: center;
+			background-color: #efeff4;
+			font-size: 15px;
+			line-height: 40px;
+			color: #777;
+		}
+		.mui-pull-top-canvas {
+			overflow: hidden;
+			background-color: #fafafa;
+			border-radius: 40px;
+			box-shadow: 0 4px 10px #bbb;
+			width: 40px;
+			height: 40px;
+			margin: 0 auto;
+		}
+		.mui-pull-top-canvas canvas {
+			width: 40px;
+		}
+		.mui-slider-indicator.mui-segmented-control {
+			background-color: #efeff4;
+		}
+		.mui-segmented-control a{
+			height: 20px;
+			line-height: 20px;
+			padding: 0;
+		}		
+		
+		.mui-table .title{
+			margin: 20px 15px 7px;
+			color: #6d6d72;
+			font-size: 15px;
+		}
+		.mui-table div p{
+			color: #000000;
+		}
+		.mui-table div p.weight-5{
+			font-weight: 500;
+		}		
+		.mui-table li div i{
+			position:absolute;
+			color: #E44346;
+			top: 20px;
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+<header id="my-funds" class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title">账户明细</h1>
+</header>
+<div class="mui-content">
+	<div style="padding: 10px 10px;">
+		<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-negative">
+			<a class="mui-control-item mui-active" href="#item1">全部</a>
+			<a class="mui-control-item" href="#item2">完成</a>
+			<a class="mui-control-item" href="#item3">未完成</a>
+		</div>
+	</div>
+	<div class="mui-slider-group">
+		<div id="item1" class="mui-control-content mui-active">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="0" class="mui-table-view"></ul>
+				</div>
+			</div>
+		</div>
+		<div id="item2" class="mui-control-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="1" class="mui-table-view">
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/mui.pullToRefresh.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/mui.pullToRefresh.material.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="UTF-8">
+	mui.init({
+		swipeBack: true //启用右滑关闭功能
+	});
+	(function($) {
+		//阻尼系数
+		var deceleration = mui.os.ios?0.063:0.9009;
+		var currentPage  = [];
+		$('.mui-scroll-wrapper').scroll({
+			bounce: false,
+			indicators: true, //是否显示滚动条
+			deceleration:deceleration
+		});
+		
+		$.ready(function() {
+			//循环初始化所有下拉刷新，上拉加载。
+			$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+				$(pullRefreshEl).pullToRefresh({
+					down: {
+						callback: function() {
+							var self = this;
+							setTimeout(function() {
+								var ul   = self.element.querySelector('.mui-table-view');
+								var item = ul.getAttribute("id");
+								currentPage[item]  = 1; 
+								createFragment(ul, true, listNum = item);
+								self.endPullDownToRefresh();
+							}, 1000);
+						}
+					},
+					up: {
+						callback: function() {
+							var self = this;
+							setTimeout(function() {
+								var ul   = self.element.querySelector('.mui-table-view');
+								var item = ul.getAttribute("id");
+								createFragment(ul, false, listNum = item);
+								self.endPullUpToRefresh();
+							}, 1000);
+						}
+					}
+				});
+			});
+			
+			var createFragment = function(insertDoc, pullDown = false, listNum) {
+				var li = null;
+				var html  = '';
+				if(pullDown) insertDoc.innerHTML = '';
+				ajaxDataInfo(currentPage[listNum], 10, listNum, function(result){
+					if(!isEmptyObject(result.data.items)){
+						mui.each(result.data.items, function(index, item){
+							li = document.createElement('li');
+							li.className = "mui-table-view-cell";
+							if(listNum == 0){
+								html =  '<div class="mui-table">'+
+											'<div class="mui-table-cell mui-col-xs-6">'+
+												'<p class="mui-h5">'+item.friend_name+'</p>'+
+												'<p class="mui-h6">'+item.create_date+' '+item.create_time+'</p>'+
+											'</div>'+
+											'<div class="mui-table-cell mui-col-xs-4" style="text-align:center">'+
+												'<p class="mui-h5">￥'+item.order_amount+'</p>'+
+												'<p class="mui-h6">消费金额</p>'+
+											'</div>'+
+											'<div class="mui-table-cell mui-col-xs-6 mui-text-right">'+
+												'<p class="mui-h5">￥'+item.bonus_value+'</p>'+
+												'<p class="mui-h6">红包</p>'+
+											'</div>'+
+										'</div>';								
+							}else{
+								html =  '<div class="mui-table">'+
+											'<div class="mui-table-cell mui-col-xs-3">'+
+												'<p class="mui-h5">'+item.real_name+'</p>'+
+												'<p class="mui-h6">姓名</p>'+
+											'</div>'+
+											'<div class="mui-table-cell mui-col-xs-6 mui-text-right">'+
+												'<p class="mui-h5">'+item.mobile+'</p>'+
+												'<p class="mui-h6">电话</p>'+
+											'</div>'+
+										'</div>';									
+							}
+							li.innerHTML = html;
+							insertDoc.appendChild(li);
+						})
+						updateCurrentPage(listNum, 'up');
+					}
+				});
+			};
+			
+			var ajaxDataInfo = function(currentPage, pageSize, type = 1, callback){
+				var url			= '';
+				var currentPage = currentPage == null ? 1 : currentPage;
+				if(type == 0){
+					url = '/user/Bonus/getRecommendList';
+				}else{
+					url = '/user/User/getIntroducerList';
+				}
+				BDF.api(url, {'data': {"var_page": pageSize,"page": currentPage}}, 
+					function (result) {
+		        		if(!isEmptyObject(result)){
+		        			if(result.status == '0'){
+		        				return callback(result);
+		        			}else{
+		        				plus.nativeUI.toast(result.msg);
+		        			}
+		        		}else{
+		        			plus.nativeUI.toast("网络错误，请联系管理员");
+		        		}
+		        	}
+				)
+			}
+			
+			var updateCurrentPage = function(listType, actType = 'up'){
+				if(currentPage[listType] == null){
+					currentPage[listType] = 1;
+				}
+				actType == 'up' ? currentPage[listType]++ : currentPage[listType]--;
+			}
+			
+			//初始化数据
+			$.each(document.querySelectorAll('.mui-table-view'), function(index, item){
+				var listNum = item.getAttribute("id");
+				currentPage[listNum]  = 1; 
+				createFragment(item, true, listNum);
+			})
+		});
+	})(mui);
+</script>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>实名认证</title>
+<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css">
+<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css">
+<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css">
+<link rel="stylesheet" type="text/css" href="../../../css/common.css">
+<link rel="stylesheet" type="text/css" href="../../../css/app.css">
+<link rel="stylesheet" type="text/css" href="../../../css/certification.css">
+</head>
+<body>
+<div class="error-tpl">
+	<p>当前网络不可用，请稍后重试</p>  
+	<p><button type="button" class="btn-refresh">刷新重试</button></p>
+</div>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-pull-left back-btn"><span class="iconfont-back"></span></a>
+    <h1 class="mui-title"></h1>
+</header>
+<div class="mui-content">
+	<h3 class="mui-h3 reset-style mui-text-center">实名认证</h3>
+	<form class="mui-input-group">
+		<div class="mui-input-row">
+			<label>姓名</label>
+			<input id="name" type="text" class="mui-input-clear mui-input" placeholder="请填写姓名">
+		</div>
+		<div class="mui-input-row">
+			<label>身份证号</label>
+			<input id="identity" type="text" class="mui-input-clear mui-input" placeholder="请填写身份证号">
+		</div>
+	</form>
+	<div class="mui-content-padded">
+		<button id='submit' type="button" class="mui-btn mui-btn-block mui-btn-primary">认证</button>
+	</div>
+	<div class="mui-content-server mui-text-center">
+		<p>轻触上面的“认证”按钮，即表示您同意</p>
+		<p><font>《····许可以及服务协议》</font>和<font>《····隐私政策》</font></p>
+	</div>
+</div>
+<script src="../../../js/mui.min.js"></script>
+<script src="../../../js/app.js"></script>
+<script src="../../../js/common.js"></script>
+<script>
+(function($, doc) {
+	mui.init({
+		swipeBack:true //启用右滑关闭功能
+	});
+	var submitObj 	= doc.getElementById('submit');
+	var nameObj 	= doc.getElementById('name');
+	var identityObj = doc.getElementById('identity');
+	
+	var plusReady = function(){
+		//计算最大提现数目
+		app.getRealUserInfo("identity_is_verify", function(data){
+			if(data == 1){
+				mui.alert('实名认证已完成', '温馨提示', function() {
+					$.back();
+				});
+				return false;
+			}
+		});
+	}
+	doc.addEventListener('plusready', plusReady, false);
+	
+	submitObj.addEventListener('tap', function(event) {
+		var params = {
+			name : nameObj.value,
+			identity : identityObj.value
+		}
+		if(!params.name){
+			plus.nativeUI.toast("请输入正确的姓名");
+			return
+		}
+		if(!params.identity){
+			plus.nativeUI.toast("请输入正确的身份证号码");
+			return
+		}
+		//发送手机验证码
+		var btnArray = ['取消', '认证'];
+		$.confirm(params.name+"\r\n身份证："+params.identity, "确认信息", btnArray, function(e) {
+			if (e.index == 1) {
+				checkCertification(params.name, params.identity, function(err) {
+					if (err) {
+						plus.nativeUI.toast(err);
+						return;
+					}
+				});
+			} else {
+				return;
+			}
+		})
+	})
+	
+	var checkCertification = function(name, identity, callback){
+		callback = callback || $.noop;
+		BDF.api('/user/Verify/identityCertification', {
+			'data':{
+				'real_name':name,
+				'identity_card':identity}
+			},function (result) {
+				if(result.status == 0){
+					app.createState({real_name:name,identity_num:identity}, function(){
+						plus.nativeUI.toast("恭喜您，实名认证完成");
+						$.back();							
+					});
+				}else{
+					return callback(result.msg);
+				}
+		});
+	}
+}(mui, document));
+</script>
+</body>
+</html>

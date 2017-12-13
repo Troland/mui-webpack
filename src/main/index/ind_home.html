@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>首页</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/utils.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/home.css" />
+		<style type="text/css">
+			.mui-media {
+				font-size: 14px;
+			}
+
+			.mui-table-view .mui-media-object {
+				max-width: initial;
+				width: 90px;
+				height: 70px;
+			}
+
+			.meta-info {
+				position: absolute;
+				left: 115px;
+				right: 15px;
+				bottom: 8px;
+				color: #8f8f94;
+			}
+
+			.meta-info .author,.meta-info .time {
+				display: inline-block;
+			}
+
+			.meta-info .time {
+				float: right;
+			}
+
+			.mui-table-view:before,.mui-table-view:after {
+				height: 0;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 1px;
+			}
+
+			.banner {
+				height: 180px;
+				overflow: hidden;
+				position: relative;
+				background-position: center;
+				background-color: #ccc;
+			}
+
+			.banner img {
+				width: 100%;
+				height: auto;
+			}
+
+			.banner .title {
+				position: absolute;
+				left: 15px;
+				bottom: 15px;
+				width: 90%;
+				font-size: 16px;
+				font-weight: 400;
+				line-height: 21px;
+				color: white;
+				z-index: 11;
+			}
+			.hotLotteries {
+				background-color: #fff!important;
+			    border-top: 1px solid #eee;
+			}
+			.hotLotteries h5{
+				padding: 10px 15px;
+				margin: 0;
+				color: #222222;
+				border-bottom: 1px solid #eee;
+			}
+			.hotLotteries div.col{
+				font-size:14px;
+				padding:10px 15px;
+			    border-right: 1px solid #eee;
+			    border-bottom: 1px solid #eee;
+			}
+			.hotLotteries div.col:nth-child(even){
+				padding-right: 10px;
+			}
+			.hotLotteries div p{
+				margin: 0;
+			}
+			.hotLotteries img {
+				height: 40px;
+				margin-right: 10px;
+			}
+
+			.winner {
+				background-color: #fff!important;
+			    border-top: 1px solid #eee;
+			    margin-top: 4px;
+			}
+			.winner .winners {
+				position: relative;
+			  	height: 200px;
+			  	overflow: hidden;
+			}
+
+			.winner .winners-inner {
+				padding:0 15px;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+			}
+			.winner h5{
+				padding: 10px 15px;
+				margin: 0;
+				color: #222222;
+				border-bottom: 1px solid #eee;
+			}
+			.winner div.col{
+				padding: 5px 0;
+				font-size:14px;
+			    border-bottom: 1px solid #eee;
+			}
+			.winner div.col p{
+				margin: 0;
+			}
+			.winner div.col p span{
+				font-size: 16px;
+			}
+			.winner div.col p.user span{
+				color: #E44346;
+			}
+			.winner div.col p.amount{
+				color: #FF9912;
+				font-weight: 700;
+			}
+			.nvtt {
+				width: 100%;
+				height: 100%;
+				color: #cccccc;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			header {
+				width: 100%;
+				height: 44px;
+				font-size: 17px;
+				text-align: center;
+				line-height: 44px;
+				background: rgba(215, 75, 40, 1);
+				border-bottom: 1px solid rgba(215, 75, 40, 0.8);
+				-ms-touch-action: none;
+				box-sizing: content-box;
+				z-index: 9999;
+			}
+			.sdcontent {
+				width: 100%;
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				text-align: center;
+				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;
+				-ms-touch-action: pan-y cross-slide-y;
+				-ms-scroll-chaining: none;
+				-ms-scroll-limit: 0 50 0 50;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- <header id="header" style="display:none">
+			<div class="nvtt">首页</div>
+		</header> -->
+		<div class="mui-content" id="mui-content">
+			<div id="slider" class="mui-slider"></div>
+			<div class="notice-container clearfix">
+				<div class="notices__hd">公告:</div>
+				<div class="notices__bd">
+					<div class="notices" id="J_scrollNotices">
+						<div class="notices-inner J_notice-inner">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="quick-channels">
+				<div class="quick-channel">
+					<a href="javascript:void(0)" data-vid="beecloud-html" data-link="../pay/beecloud.html">
+						<div class="quick-channel__img">
+							<img src="../../images/001.jpg" alt="">
+						</div>
+						<p class="quick-channel__text">充值/提款</p>
+					</a>
+				</div>
+				<div class="quick-channel">
+					<div class="quick-channel__img">
+						<img src="../../images/002.jpg" alt="投注记录">
+					</div>
+					<p class="quick-channel__text">投注记录</p>
+				</div>
+				<div class="quick-channel">
+					<div class="quick-channel__img">
+						<img src="../../images/003.jpg" alt="">
+					</div>
+					<p class="quick-channel__text">优惠活动</p>
+				</div>
+				<div class="quick-channel">
+					<div class="quick-channel__img">
+						<img src="../../images/004.jpg" alt="">
+					</div>
+					<p class="quick-channel__text">在线客服</p>
+				</div>
+			</div>
+			<!--热门彩票-->
+			<div class="mui-row hotLotteries" id="J_hotLottery"></div>
+			<!--最新中奖-->
+			<div class="winner">
+				<h5><span class="mui-icon mui-icon-paperplane"></span>最新中奖信息</h5>
+				<div id="J_scrollNews" class="winners">
+					<div class="winners-inner J_scroll-inner"></div>
+				</div>
+			</div>
+		</div>
+		<script id="winner-tpl" type="text/template">
+			{{each winners winner i}}
+			<div class="mui-row">
+				<div class="col mui-col-xs-4">
+					<p class="user"><span class="mui-icon mui-icon-contact"></span>{{ winner.account }}</p>
+					<p>中奖用户</p>
+				</div>
+				<div class="col mui-col-xs-5 mui-text-center">
+					<p>第20172290933期</p>
+					<p>{{ winner.lott_name }}</p>
+				</div>
+				<div class="col mui-col-xs-3 mui-text-right">
+					<p class="amount-title">中奖金额</p>
+					<p class="amount"><span class="mui-icon-extra mui-icon-extra-gold"></span>¥{{ winner.amount }}</p>
+				</div>
+			</div>
+			{{/each}}
+		</script>
+		<script id="notice-tpl" type="text/template">
+			{{each notices notice i}}
+			<div class="notice">
+				<a>{{ notice.msg_content }}</a>
+			</div>
+			{{/each}}
+		</script>
+		<script id="lotteryHot-tpl" type="text/template">
+			<h5><span class="mui-icon mui-icon-paperplane"></span>热门彩票</h5>
+			{{each hotLotteries lottery i}}
+				<div class="col mui-col-xs-6 mui-col-sm-12">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" src="{{ lottery.lott_icon }}" alt="图标">
+						<div class="mui-media-body">
+							{{ lottery.lott_name }}
+							<p class="mui-ellipsis">每天120期，每10分钟开奖</p>
+						</div>
+					</a>
+				</div>
+			{{/each}}
+		</script>
+		<script id="slider-tpl" type="text/template">
+			<div class="mui-slider-group mui-slider-loop home-banner" id="J_slider-inner">
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="javascript:void(0)"><img src="{{ sliders[0].link }}"></a>
+				</div>
+				{{each sliders slider i}}
+				<div class="mui-slider-item">
+					<a href="javascript:void(0)"><img src="{{ slider.image }}"></a>
+				</div>
+				{{/each}}
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="javascript:void(0)"><img src="{{ sliders[sliders.length - 1].image }}"></a>
+				</div>
+			</div>
+			<div class="mui-slider-indicator">
+				{{each sliders slider i}}
+				<div class="mui-indicator {{if i === 0}}mui-active{{/if}}"></div>
+				{{/each}}
+			</div>
+		</script>
+		<!-- <script type="text/javascript" src="../../js/immersed.js"></script> -->
+		<script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				$.init();
+				var titleNView = { //详情页原生导航配置
+					backgroundColor: '#f7f7f7', //导航栏背景色
+					titleText: '', //导航栏标题
+					titleColor: '#000000', //文字颜色
+					type: 'transparent', //透明渐变样式
+					autoBackButton: true, //自动绘制返回箭头
+					splitLine: { //底部分割线
+						color: '#cccccc'
+					}
+				};
+
+				// 获取元素样式
+				function getStyle(el, styleProp) {
+					var value, defaultView = (el.ownerDocument || document).defaultView;
+					// W3C standard way:
+					if(defaultView && defaultView.getComputedStyle) {
+						// sanitize property name to css notation
+						// (hypen separated words eg. font-Size)
+						styleProp = styleProp.replace(/([A-Z])/g, '-$1').toLowerCase();
+						return defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+					} else if(el.currentStyle) { // IE
+						// sanitize property name to camelCase
+						styleProp = styleProp.replace(/\-(\w)/g, function(str, letter) {
+							return letter.toUpperCase();
+						});
+						value = el.currentStyle[styleProp];
+						// convert other units to pixels on IE
+						if(/^\d+(em|pt|%|ex)?$/i.test(value)) {
+							return(function(value) {
+								var oldLeft = el.style.left,
+									oldRsLeft = el.runtimeStyle.left;
+								el.runtimeStyle.left = el.currentStyle.left;
+								el.style.left = value || 0;
+								value = el.style.pixelLeft + 'px';
+								el.style.left = oldLeft;
+								el.runtimeStyle.left = oldRsLeft;
+								return value;
+							})(value);
+						}
+						return value;
+					}
+				}
+				/**
+				 * 滚动消息
+				 * @param {Object} $scrollContainer 滚动容器
+				 * @param {Object} $scrollContent 滚动的内容
+				 * @param {Object} direction 滚动方向垂直或者水平
+				 */
+				function scrollNews($scrollContainer, $scrollContent, direction) {
+					if(direction === 'vertical') {
+						var $copyScrollContent;
+						var originScrollDomTop;
+						var copyScrollDomTop;
+						var scrollDomHeight;
+						scrollDomHeight = parseInt(getStyle($scrollContent, 'height'), 10);
+						$copyScrollContent = $scrollContent.cloneNode(true);
+						$copyScrollContent.style.top = scrollDomHeight + 'px';
+						$scrollContainer.appendChild($copyScrollContent);
+						originScrollDomTop = parseInt(getStyle($scrollContent, 'top'), 10);
+						copyScrollDomTop = scrollDomHeight;
+						//判断是否需要滚动
+						if($scrollContent.getBoundingClientRect().height <= $scrollContainer.getBoundingClientRect().height) {
+							return;
+						}
+						setInterval(function() {
+							originScrollDomTop--;
+							copyScrollDomTop--;
+							$scrollContent.style.top = originScrollDomTop + 'px';
+							$copyScrollContent.style.top = copyScrollDomTop + 'px';
+							// 当滚动了容器高度的时候原始内容移动到复制的滚动元素的后面
+							if(originScrollDomTop == -(scrollDomHeight)) {
+								originScrollDomTop = scrollDomHeight;
+							}
+							if(copyScrollDomTop == -(scrollDomHeight)) {
+								copyScrollDomTop = scrollDomHeight;
+							}
+						}, 200);
+					} else {
+						var $copyScrollContent;
+						var originScrollDomLeft;
+						var copyScrollDomLeft;
+						var scrollDomWidth;
+						var $items = document.getElementsByClassName('notice');
+						var width = 0;
+						var i;
+						// 计算滚动内容宽度包括margin, paddding, border
+						for(i = 0; i < $items.length; i++) {
+							width += $items[i].getBoundingClientRect().width
+						}
+						//判断是否需要滚动
+						if(width <= $scrollContainer.getBoundingClientRect().width) {
+							return;
+						}
+						scrollDomWidth = parseInt(width, 10)
+						$scrollContent.style.width = width + 'px';
+						$copyScrollContent = $scrollContent.cloneNode(true);
+						$copyScrollContent.style.left = scrollDomWidth + 'px';
+						$scrollContainer.appendChild($copyScrollContent);
+						originScrollDomLeft = parseInt(getStyle($scrollContent, 'left'), 10);
+						copyScrollDomLeft = scrollDomWidth;
+
+						setInterval(function() {
+							originScrollDomLeft--;
+							copyScrollDomLeft--;
+							$scrollContent.style.left = originScrollDomLeft + 'px';
+							$copyScrollContent.style.left = copyScrollDomLeft + 'px';
+							// 当滚动了容器高度的时候原始内容移动到复制的滚动元素的后面
+							if(originScrollDomLeft == -(scrollDomWidth)) {
+								originScrollDomLeft = scrollDomWidth;
+							}
+							if(copyScrollDomLeft == -(scrollDomWidth)) {
+								copyScrollDomLeft = scrollDomWidth;
+							}
+						}, 200);
+					}
+				}
+
+				mui.plusReady(function() {
+					var $header = document.getElementById('header');
+					var $content = document.getElementById('mui-content');
+          // 监听页面滚动
+					// window.addEventListener('scroll', function () {
+					// 	var scrollTop = $content.scrollTop;
+					// 	console.log('Top:', scrollTop);
+          //
+					// 	if (scrollTop > 10) {
+					// 		$header.style.display = '';
+					// 		$content.style.top = '44px';
+					// 		$content.style.marginTop = '20px';
+					// 	} else {
+					// 		$header.style.display = 'none';
+					// 		$content.style.top = '0';
+					// 		$content.style.marginTop = '0';
+					// 	}
+					// }, false);
+
+					// 快速通道
+					$('.quick-channels').on('tap', '.quick-channel a', function () {
+						var webviewId = this.getAttribute('data-vid'),
+							url = this.getAttribute('data-link');
+
+						$.openWindow({
+							id: webviewId,
+							url: url
+						})
+						return false;
+					});
+
+					var $hotLottery = document.getElementById('J_hotLottery');
+					// 热门彩种
+					BDF.api('/vdd/Lott/getLottList', {
+						'type': 'POST',
+						'data': {
+							is_hot: 1,
+							crossDomain: true
+						}
+					}, function(res) {
+						if(res.status === '0') {
+							var lotteries = res.data.items,
+								html;
+							lotteries.forEach(function(item) {
+								if(item.lott_icon == null || item.lott_icon == ''){
+									var rand = Math.floor ( Math.random ( ) * 10 + 1 );
+									item.lott_icon = '../../images/product/vdd_'+rand+'.png';
+								}else{
+									item.lott_icon = BDF.AppConfig.apiUrl + item.lott_icon;
+								}
+							});
+							html = template('lotteryHot-tpl', {
+								hotLotteries: lotteries
+							});
+
+							$hotLottery.innerHTML = html;
+						} else {
+							$.toast(res.msg)
+						}
+					});
+					$('#J_hotLottery').on('tap', 'a', function() {
+						var lotteryType = this.getAttribute('');
+						$.openWindow({
+							id: 'shopping-index-html',
+							url: '../shopping/shopping_index.html',
+							extras: {
+								lotteryType: 1
+							}
+						})
+					})
+
+					// 请求轮播图
+					var slider = mui("#slider");
+					var $sliderCon = document.getElementById('slider');
+					BDF.api('/vdd/Banner/getBannerList', {
+						'type': 'POST',
+						'data': {
+							crossDomain: true
+						}
+					}, function(res) {
+						if(res.status === '0') {
+							var banners = res.data,
+								html;
+
+							html = template('slider-tpl', {
+								sliders: banners
+							});
+
+							$sliderCon.innerHTML = html;
+							slider.slider({
+								interval: 5000
+							});
+						} else {
+							$.toast(res.msg)
+						}
+					});
+
+					// 中奖榜
+					var scrollContainerEl = document.getElementById('J_scrollNews');
+					var scrollContentEl = document.getElementsByClassName('J_scroll-inner')[0];
+					BDF.api('/vdd/Lott/getNewestRewardList', {
+						'type': 'POST',
+						'data': {
+							crossDomain: true
+						}
+					}, function(res) {
+						if(res.status === '0') {
+							var winners = res.data,
+								html;
+
+							html = template('winner-tpl', {
+								winners: winners
+							});
+							scrollContentEl.innerHTML = html;
+							scrollNews(scrollContainerEl, scrollContentEl, 'vertical');
+						} else {
+							$.toast(res.msg)
+						}
+					});
+
+					// 公告
+					var $scrollNoticeContainer = document.getElementById('J_scrollNotices');
+					var $scrollNoticeContent = document.getElementsByClassName('J_notice-inner')[0];
+
+					BDF.api('/vdd/Announcement/getAll', {
+						'type': 'POST',
+						'data': {
+							crossDomain: true
+						}
+					}, function(res) {
+						if(res.status === '0') {
+							var notices = res.data,
+								html;
+
+							html = template('notice-tpl', {
+								notices: notices
+							});
+							$scrollNoticeContent.innerHTML = html;
+							scrollNews($scrollNoticeContainer, $scrollNoticeContent, 'horizontal');
+						} else {
+							$.toast(res.msg)
+						}
+					});
+				});
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

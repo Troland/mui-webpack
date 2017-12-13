@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>订单明细</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/user/order.css" />
+	</head>
+
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="list-table">
+					<ul id="list-data" class="mui-table-view mui-table-view-condensed"></ul>
+				</div>
+			</div>
+		</div>
+		<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				$.ready(function() {
+					mui.init({
+						swipeBack: true, //启用右滑关闭功能
+						pullRefresh: {
+							container: '#pullrefresh',
+							down: {
+								callback: pulldownRefresh
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+					});
+		
+					//变量定义
+					var nowPage = 1;
+					var plusready = function() {
+						ajaxDataInfo(nowPage, 10, function(result) {
+							uploadListBox(result, function(e) {
+								if(!e) {
+									nowPage--;
+									plus.nativeUI.toast("没有更多数据了");
+								}
+							});
+						});
+						nowPage++;
+					}
+					/**
+					 * 下拉刷新具体业务实现
+					 */
+					function pulldownRefresh() {
+						plus.webview.currentWebview().reload();
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh(true); //refresh completed
+					}
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						setTimeout(function() {
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+							ajaxDataInfo(nowPage, 10, function(result) {
+								uploadListBox(result, function(e) {
+									if(!e) {
+										nowPage--;
+										plus.nativeUI.toast("没有更多数据了");
+									}
+								});
+							});
+							nowPage++;
+						}, 1500);
+					}
+		
+					var uploadListBox = function(result, callback) {
+						var table = document.body.querySelector('#list-data');
+						var html = '';
+						var order_id = '';
+						if(!isEmptyObject(result.data.items)) {
+							mui.each(result.data.items, function(index, item) {
+								console.info(JSON.stringify(item));
+								var li = document.createElement('li');
+								li.className = "mui-table-view-cell";
+								html = '<div class="mui-table" id="'+order_id+'">' +
+									'<div class="mui-table-cell mui-col-xs-5">' +
+									'<p class="mui-h5">第2017110845期</p>' +
+									'<p class="mui-h6">' + item.create_time + '</p>' +
+									'</div>' +
+									'<div class="mui-table-cell mui-col-xs-5 mui-text-center">' +
+									'<p class="mui-h5">安徽11选5</p>' +
+									'<p class="mui-h6">共1注</p>' +
+									'</div>' +
+									'<div class="mui-table-cell mui-col-xs-3 mui-text-right">' +
+									'<p class="mui-h5">未中奖</p>' +
+									'<p class="mui-h6">状态</p>' +
+									'</div>' +
+									'</div>';
+								li.innerHTML = html;
+								table.appendChild(li);
+							})
+							orderActionFun();
+						} else {
+							return callback(false);
+						}
+					}
+		
+					var ajaxDataInfo = function(page, list_num, callback) {
+						BDF.api('/order/order/getOrderList', {
+								'data': {
+									"var_page": list_num,
+									"page": page
+								}
+							},
+							function(result) {
+								if(!isEmptyObject(result)) {
+									if(result.status == '0') {
+										return callback(result);
+									} else {
+										plus.nativeUI.toast(result.msg);
+									}
+								} else {
+									plus.nativeUI.toast("网络错误，请联系管理员");
+								}
+							}
+						)
+					}
+					
+					document.addEventListener('plusready', plusready, false);
+					
+					var orderActionFun = function(){
+						$("#list-data").on("tap", "div.mui-table", function(){
+						    var orderId = this.getAttribute("id");
+					    		if(orderId != null){
+					    			openWebview('ord-info-html', 'ord_info.html', {extras:{order_id:orderId}});
+					    		}
+						})
+					}
+				})
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

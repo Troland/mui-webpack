@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>购彩中心</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui-icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.adv-box {
+				background: #FFFFFF;
+				width: auto;
+			}
+
+			.adv-box img {
+				width: 100%;
+			}
+
+			.lotteries {
+				background-color: #fff!important;
+				font-size: 12px;
+			}
+
+			.lotteries h5 {
+				padding: 10px 15px;
+				margin: 0;
+				color: #222222;
+				border-bottom: 1px solid #eee;
+			}
+
+			.lotteries div.col {
+				font-size: 12px;
+				padding: 10px 15px;
+				border-right: 1px solid #eee;
+				border-bottom: 1px solid #eee;
+			}
+
+			.lotteries div.col span {
+				position: relative;
+				top: -1px;
+				font-size: 8px;
+				line-height: 1;
+				display: inline-block;
+				padding: 2px 3px;
+				border-radius: 100px;
+				color: #fff;
+			}
+
+			span.publish {
+				background-color: #f0ad4e;
+			}
+
+			span.new {
+				background-color: #FF0000;
+			}
+
+			span.onlie {
+				background-color: #00DD00;
+			}
+
+			.lotteries div.col:nth-child(even) {
+				padding-right: 10px;
+			}
+
+			.lotteries div p {
+				font-size: 10px;
+				margin: 0;
+			}
+
+			.lotteries img {
+				height: 35px;
+				margin-top: 3px;
+				margin-right: 10px;
+			}
+			.nvtt {
+				width: 100%;
+				height: 100%;
+				color: #fff;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			.sdcontent {
+				width: 100%;
+				position: fixed;
+				top: 44px;
+				bottom: 0;
+				text-align: center;
+				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;
+				-ms-touch-action: pan-y cross-slide-y;
+				-ms-scroll-chaining: none;
+				-ms-scroll-limit: 0 50 0 50;
+			}
+			.immersed-header {
+				width: 100%;
+				height: 44px;
+				position: fixed;
+				top: 0;
+				left: 0;
+				font-size: 17px;
+				text-align: center;
+				line-height: 44px;
+				background: #D74B28;
+				/*background: -webkit-linear-gradient(top,rgba(215,75,40,1),rgba(215,75,40,0.8));*/
+				z-index: 9999;
+				/*border-bottom: 1px solid rgba(215,75,40,0.8);*/
+				-ms-touch-action: none;
+				box-sizing: content-box;
+			}
+			.mui-content {
+				padding-top: 44px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="immersed-header">
+			<div class="nvtt">彩票中心</div>
+		</header>
+		<div class="mui-content" id="content">
+			<div class="adv-box"><img src="../../images/product/banner_001.png"></div>
+			<div class="mui-row lotteries" id="lottery"></div>
+		</div>
+		<script id="lottery-tpl" type="text/template">
+			{{each lotteries lottery i}}
+			<div class="col mui-col-xs-6 mui-col-sm-12">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left" src="{{ lottery.lott_icon }}" alt="图标">
+					<div class="mui-media-body mui-ellipsis">
+						{{ lottery.lott_name }}<span class="{{ lottery.label.status }}">{{ lottery.label.name }}</span>
+						<p class="mui-ellipsis">{{ lottery.lott_info }}</p>
+					</div>
+				</a>
+			</div>
+			{{/each}}
+		</script>
+		<script type="text/javascript" src="../../js/immersed.js"></script>
+		<script src="../../js/arttpl.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/public.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="UTF-8">
+			(function($, doc) {
+				mui.plusReady(function() {
+					var $lottery = doc.getElementById('lottery');
+					// 热门彩种
+					var lotteryOne = function() {
+						BDF.api('/vdd/Lott/getLottList', {
+							'type': 'POST',
+							'data': {
+								is_hot: 0,
+								crossDomain: true
+							}
+						}, function(res) {
+							if(res.status === '0') {
+								var lotteries = res.data.items,
+									html;
+								lotteries.forEach(function(item) {
+									if(item.lott_icon == null || item.lott_icon == '') {
+										var rand = Math.floor(Math.random() * 10 + 1);
+										item.lott_icon = '../../images/product/vdd_' + rand + '.png';
+									} else {
+										item.lott_icon = BDF.AppConfig.apiUrl + item.lott_icon;
+									}
+									//标签整理
+									item.label = labelShow(item.lott_tags);
+								});
+								html = template('lottery-tpl', {
+									lotteries: lotteries
+								});
+								$lottery.innerHTML = html;
+							} else {
+								$.toast(res.msg)
+							}
+						});
+					}
+					var labelShow = function(label_id) {
+						var label = new Object;
+						switch(label_id) {
+							case 0:
+								label.status = '';
+								label.name = '';
+								break;
+							case 1:
+								label.status = 'publish';
+								label.name = '今天开奖';
+								break;
+							case 2:
+								label.status = 'online';
+								label.name = '即将上线';
+								break;
+							case 3:
+								label.status = 'new';
+								label.name = '新品';
+								break;
+							case 4:
+								label.status = 'stop';
+								label.name = '停止销售';
+								break;
+							default:
+								label = {
+									status: '',
+									name: ''
+								};
+						}
+
+						return label;
+					}
+					//running
+					lotteryOne();
+				});
+
+				$('#lottery').on('tap', 'a', function() {
+					var lotteryType = this.getAttribute('');
+
+					$.openWindow({
+						id: 'shopping-index-html',
+						url: '../shopping/shopping_index.html',
+						extras: {
+							lotteryType: 1
+						},
+						styles: {
+							statusbar: {
+								background: '#E44346'
+							}
+						}
+					})
+				})
+			})(mui, document);
+		</script>
+	</body>
+
+</html>

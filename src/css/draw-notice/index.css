@@ -1,0 +1,67 @@
+.lottery-table-view {
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+  background-color: #fff;
+}
+.lottery-list {
+  position: relative;
+  padding: 5px 10px;
+  background-color: #fff;
+}
+.lottery-list__item {
+  position: relative;
+  padding: 15px;
+}
+.lottery-list__item a {
+  display: block;
+  position: relative;
+}
+.lottery-list__item:after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 15px;
+  height: 1px;
+  content: '';
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  background-color: #c8c7cc;
+}
+.lottery-hd {
+  margin-bottom: 15px;
+  color: #C0C0C0;
+}
+.lottery-hd strong {
+  margin-right: 10px;
+  color: #000;
+}
+.lottery-num {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  
+  color: #f00;
+  font-size: 20px;
+}
+.lottery-num_current {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  background-color: #f00;
+  color: #fff;
+}
+.lottery-num_special-current {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  background-color: #23f;
+  color: #fff;
+}
+.lottery-num.lottery-num_special {
+  color: #23f;
+}
